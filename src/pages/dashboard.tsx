@@ -1,5 +1,6 @@
 import LinkNavbar from '@/components/other/link-navbar'
-import { Link, Outlet, useLocation } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
+import { Toaster } from 'sonner'
 
 const DashboardPage = () => {
     // CREATE IS ACTIVE LINK NAVBAR USING REACT-ROUTER
@@ -9,7 +10,8 @@ const DashboardPage = () => {
     }
     return (
         <section className="bg-gray-100 min-h-screen">
-            <div className="bg-blue-primary bg-[url('/bg-dashboard.png')] min-h-44 lg:min-h-64 bg-bottom bg-no-repeat bg-contain">
+            <Toaster />
+            <div className="bg-blue-primary bg-[url('/bg-dashboard.png')] min-h-56 lg:min-h-96 bg-bottom bg-no-repeat bg-contain">
                 {/* TOP NAV */}
                 <div className="container mx-auto py-6 px-8">
                     <div className="flex justify-between items-center">
@@ -24,9 +26,9 @@ const DashboardPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="container mx-auto py-4 px-8 -mt-24 lg:-mt-32">
+            <div className="container mx-auto py-4 px-8 -mt-24 lg:-mt-54">
                 {/* MAIN NAV */}
-                <div className="flex space-x-3 mb-4">
+                <div className="flex space-x-3 bg-black/10 -mb-12 pb-15 pt-3 px-8 rounded-3xl">
                     <LinkNavbar
                         to="/dashboard"
                         isActive={isActive('/dashboard')}
@@ -37,7 +39,7 @@ const DashboardPage = () => {
                         to="/dashboard/anak"
                         isActive={isActive('/dashboard/anak')}
                     >
-                        Tambah Anak
+                        List Anak
                     </LinkNavbar>
                     <LinkNavbar
                         to="/dashboard/profil"

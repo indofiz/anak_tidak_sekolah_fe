@@ -13,7 +13,7 @@ interface CardFormProps {
 }
 const CardForm: React.FC<CardFormProps> = ({ title, description, content }) => {
     return (
-        <Card className="shadow-none border-0 px-0 py-4">
+        <Card className="shadow-none border-0 px-0 py-4 w-full">
             <CardHeader>
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>

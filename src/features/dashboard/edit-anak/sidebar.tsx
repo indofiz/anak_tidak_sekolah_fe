@@ -13,7 +13,7 @@ const SidebarForm = () => {
     }
 
     return (
-        <div className="bg-[#F8F8F8] px-4 py-8 h-full w-1/4">
+        <div className="bg-[#F8F8F8] px-4 py-8 h-full w-1/4 rounded-md">
             <div className="flex flex-col gap-0.5">
                 <SidebarLink
                     to="data-anak"

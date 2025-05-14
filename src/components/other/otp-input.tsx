@@ -57,7 +57,7 @@ const OTPInput = () => {
 
     return (
         <div className="flex flex-col space-y-4">
-            <Label htmlFor="otp-0">Enter 6-digit verification code</Label>
+            <Label htmlFor="otp-0">Masukan 6 Digit Kode OTP</Label>
             <div className="flex items-center justify-center gap-2">
                 {otp.map((digit, index) => (
                     <Input
