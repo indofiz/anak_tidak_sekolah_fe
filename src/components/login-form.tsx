@@ -38,7 +38,7 @@ export function LoginForm({
                                         Nomor Whatsapp
                                     </Label>
                                     <Input
-                                        id="email"
+                                        id="wa"
                                         type="text"
                                         placeholder="contoh: 083175087398"
                                         required

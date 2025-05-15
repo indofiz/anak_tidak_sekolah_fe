@@ -244,14 +244,14 @@ export default function FormDataAnak() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="m@example.com">
-                                        m@example.com
+                                    <SelectItem value="Kategori 1">
+                                        Kategori 1
                                     </SelectItem>
-                                    <SelectItem value="m@google.com">
-                                        m@google.com
+                                    <SelectItem value="Kategori 2">
+                                        Kategori 2
                                     </SelectItem>
-                                    <SelectItem value="m@support.com">
-                                        m@support.com
+                                    <SelectItem value="Kategori 3">
+                                        Kategori 3
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
@@ -277,14 +277,14 @@ export default function FormDataAnak() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="m@example.com">
-                                        m@example.com
+                                    <SelectItem value="Sub Kategori 1">
+                                        Sub Kategori 1
                                     </SelectItem>
-                                    <SelectItem value="m@google.com">
-                                        m@google.com
+                                    <SelectItem value="Sub Kategori 2">
+                                        Sub Kategori 2
                                     </SelectItem>
-                                    <SelectItem value="m@support.com">
-                                        m@support.com
+                                    <SelectItem value="Sub Kategori 3">
+                                        Sub Kategori 3
                                     </SelectItem>
                                 </SelectContent>
                             </Select>

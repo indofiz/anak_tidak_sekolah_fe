@@ -35,44 +35,24 @@ const formSchema = z.object({
 })
 
 export default function FormDataWali() {
-    const languages = [
-        {
-            label: 'English',
-            value: 'en',
-        },
-        {
-            label: 'French',
-            value: 'fr',
-        },
-        {
-            label: 'German',
-            value: 'de',
-        },
-        {
-            label: 'Spanish',
-            value: 'es',
-        },
-        {
-            label: 'Portuguese',
-            value: 'pt',
-        },
-        {
-            label: 'Russian',
-            value: 'ru',
-        },
-        {
-            label: 'Japanese',
-            value: 'ja',
-        },
-        {
-            label: 'Korean',
-            value: 'ko',
-        },
-        {
-            label: 'Chinese',
-            value: 'zh',
-        },
+    const pekerjaan = [
+        { label: 'Dokter', value: 'dokter' },
+        { label: 'Guru', value: 'guru' },
+        { label: 'Petani', value: 'petani' },
+        { label: 'Nelayan', value: 'nelayan' },
+        { label: 'Programmer', value: 'programmer' },
+        { label: 'Desainer', value: 'desainer' },
+        { label: 'Pengusaha', value: 'pengusaha' },
+        { label: 'Karyawan Swasta', value: 'karyawan_swasta' },
+        { label: 'Pegawai Negeri', value: 'pegawai_negeri' },
+        { label: 'Mahasiswa', value: 'mahasiswa' },
+        { label: 'Pelajar', value: 'pelajar' },
+        { label: 'Ibu Rumah Tangga', value: 'ibu_rumah_tangga' },
+        { label: 'Wiraswasta', value: 'wiraswasta' },
+        { label: 'Buruh', value: 'buruh' },
+        { label: 'Pengangguran', value: 'pengangguran' },
     ] as const
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     })
@@ -154,9 +134,9 @@ export default function FormDataWali() {
                                             )}
                                         >
                                             {field.value
-                                                ? languages.find(
-                                                      (language) =>
-                                                          language.value ===
+                                                ? pekerjaan.find(
+                                                      (kerja) =>
+                                                          kerja.value ===
                                                           field.value
                                                   )?.label
                                                 : 'Pilih Pekerjaan'}
@@ -169,30 +149,30 @@ export default function FormDataWali() {
                                         <CommandInput placeholder="Cari Pekerjaan..." />
                                         <CommandList>
                                             <CommandEmpty>
-                                                No language found.
+                                                Pekerjaan Tidak Ditemukan.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {languages.map((language) => (
+                                                {pekerjaan.map((kerja) => (
                                                     <CommandItem
-                                                        value={language.label}
-                                                        key={language.value}
+                                                        value={kerja.label}
+                                                        key={kerja.value}
                                                         onSelect={() => {
                                                             form.setValue(
                                                                 'pekerjaan',
-                                                                language.value
+                                                                kerja.value
                                                             )
                                                         }}
                                                     >
                                                         <Check
                                                             className={cn(
                                                                 'mr-2 h-4 w-4',
-                                                                language.value ===
+                                                                kerja.value ===
                                                                     field.value
                                                                     ? 'opacity-100'
                                                                     : 'opacity-0'
                                                             )}
                                                         />
-                                                        {language.label}
+                                                        {kerja.label}
                                                     </CommandItem>
                                                 ))}
                                             </CommandGroup>

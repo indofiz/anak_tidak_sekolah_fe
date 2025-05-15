@@ -24,28 +24,40 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 const items = [
     {
-        id: 'alasan_1',
-        label: 'Alasan 1',
+        id: 'tidak_mampu_biaya',
+        label: 'Tidak mampu biaya sekolah',
     },
     {
-        id: 'home',
-        label: 'Home',
+        id: 'bekerja',
+        label: 'Harus bekerja / membantu orang tua',
     },
     {
-        id: 'applications',
-        label: 'Applications',
+        id: 'kurang_minat',
+        label: 'Kurang minat belajar',
     },
     {
-        id: 'desktop',
-        label: 'Desktop',
+        id: 'jarak_sekolah',
+        label: 'Jarak sekolah terlalu jauh',
     },
     {
-        id: 'downloads',
-        label: 'Downloads',
+        id: 'pernikahan_dini',
+        label: 'Menikah di usia dini',
     },
     {
-        id: 'documents',
-        label: 'Documents',
+        id: 'disabilitas',
+        label: 'Disabilitas atau kebutuhan khusus',
+    },
+    {
+        id: 'tidak_ada_sekolah',
+        label: 'Tidak tersedia sekolah di daerahnya',
+    },
+    {
+        id: 'orang_tua_tidak_izinkan',
+        label: 'Orang tua tidak mengizinkan',
+    },
+    {
+        id: 'alasan_lain',
+        label: 'Alasan lainnya',
     },
 ] as const
 
@@ -54,6 +66,7 @@ const formSchema = z.object({
     npsn_sekolah: z.string().min(1),
     tingkat: z.string(),
     kelas: z.string().min(1),
+    tahun: z.string().min(1),
     items: z.array(z.string()).refine((value) => value.some((item) => item), {
         message: 'You have to select at least one item.',
     }),
@@ -63,7 +76,7 @@ export default function FormDataSekolah() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            items: ['alasan_1'],
+            items: ['tidak_mampu_biaya'],
         },
     })
 
@@ -75,7 +88,8 @@ export default function FormDataSekolah() {
                     <code className="text-white">
                         {JSON.stringify(values, null, 2)}
                     </code>
-                </pre>
+                </pre>,
+                { style: { background: 'green', color: '#fff' } }
             )
         } catch (error) {
             console.error('Form submission error', error)
@@ -143,14 +157,14 @@ export default function FormDataSekolah() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="m@example.com">
-                                        m@example.com
+                                    <SelectItem value="SD Sederajat">
+                                        SD Sederajat
                                     </SelectItem>
-                                    <SelectItem value="m@google.com">
-                                        m@google.com
+                                    <SelectItem value="SMP Sederajat">
+                                        SMP Sederajat
                                     </SelectItem>
-                                    <SelectItem value="m@support.com">
-                                        m@support.com
+                                    <SelectItem value="SMA Sederajat">
+                                        SMA Sederajat
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
@@ -181,7 +195,7 @@ export default function FormDataSekolah() {
 
                 <FormField
                     control={form.control}
-                    name="kelas"
+                    name="tahun"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Tahun</FormLabel>
@@ -192,7 +206,6 @@ export default function FormDataSekolah() {
                                     {...field}
                                 />
                             </FormControl>
-
                             <FormMessage />
                         </FormItem>
                     )}

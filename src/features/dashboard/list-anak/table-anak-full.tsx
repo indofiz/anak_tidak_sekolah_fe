@@ -6,6 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
     Table,
     TableBody,
@@ -15,6 +16,17 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { Eye, Pencil, Trash2 } from 'lucide-react'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 const childrenData = [
     {
@@ -189,6 +201,22 @@ export function TableAnakFull() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
+                <div className="flex w-full justify-between mb-4">
+                    <div className="w-full flex items-center space-x-2">
+                        <div className="flex w-full max-w-lg items-center space-x-2">
+                            <Input
+                                type="email"
+                                placeholder="Cari nama anak atau nik"
+                            />
+                            <Button type="submit" variant={'outline'}>
+                                Cari
+                            </Button>
+                        </div>
+                    </div>
+                    <div>
+                        <Button>Export</Button>
+                    </div>
+                </div>
                 <Table>
                     <TableHeader className="bg-gray-50">
                         <TableRow>
@@ -241,13 +269,38 @@ export function TableAnakFull() {
                                         <Pencil size={16} />
                                         Edit
                                     </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="bg-red-100 text-red-500 border-red-200"
-                                        size={'icon'}
-                                    >
-                                        <Trash2 size={16} />
-                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className="bg-red-100 text-red-500 border-red-200"
+                                                size={'icon'}
+                                            >
+                                                <Trash2 size={16} />
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Apakah anda yakin ingin
+                                                    menghapus?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Setelah dihapus, data tidak
+                                                    bisa dikembalikan, harus di
+                                                    tambah ulang.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    Batal
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction>
+                                                    Ya, Hapus
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </TableCell>
                             </TableRow>
                         ))}

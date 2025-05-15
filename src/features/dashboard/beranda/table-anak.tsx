@@ -47,15 +47,23 @@ const childrenData = [
         bersedia: 'Ya',
         status: 'Selesai',
     },
+    {
+        namaAnak: 'Rizky Pratama',
+        namaWali: 'Andi Setiawan',
+        jenisKelamin: 'Laki-laki',
+        usia: 8,
+        bersedia: 'Ya',
+        status: 'Selesai',
+    },
 ]
 
 export function TableAnak() {
     return (
         <Card className="w-full shadow-none">
             <CardHeader>
-                <CardTitle>Anak Baru Ditambah</CardTitle>
+                <CardTitle>5 Data Anak Terbaru</CardTitle>
                 <CardDescription>
-                    Semua data anak yang baru ditambahkan oleh PSM
+                    Data anak yang baru ditambahkan oleh PSM
                 </CardDescription>
             </CardHeader>
             <CardContent>
