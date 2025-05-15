@@ -8,8 +8,18 @@ import {
     CardTitle,
 } from './ui/card'
 import OTPInput from './other/otp-input'
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
+    const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
+
+    const navigate = useNavigate()
+
+    const onSubmit = () => {
+        if (otp.length == 6) navigate('/dashboard')
+    }
+
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
@@ -23,9 +33,13 @@ export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
                     <div className="grid gap-6">
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <OTPInput />
+                                <OTPInput otp={otp} setOtp={setOtp} />
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                onClick={onSubmit}
+                            >
                                 Login Sekarang
                             </Button>
                         </div>

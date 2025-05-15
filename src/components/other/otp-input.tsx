@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-const OTPInput = () => {
-    const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
+interface OTPInputProps {
+    otp: string[]
+    setOtp: Dispatch<SetStateAction<string[]>>
+}
+const OTPInput: React.FC<OTPInputProps> = ({ otp, setOtp }) => {
     const inputRefs = useRef<HTMLInputElement[]>([])
 
     useEffect(() => {

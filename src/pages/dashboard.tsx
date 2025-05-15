@@ -1,10 +1,11 @@
 import LinkNavbar from '@/components/other/link-navbar'
-import { Outlet, useLocation } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { Toaster } from 'sonner'
 
 const DashboardPage = () => {
     // CREATE IS ACTIVE LINK NAVBAR USING REACT-ROUTER
     const location = useLocation()
+    const navigate = useNavigate()
     const isActive = (path: string) => {
         return location.pathname === path
     }
@@ -15,12 +16,17 @@ const DashboardPage = () => {
                 {/* TOP NAV */}
                 <div className="container mx-auto py-6 px-8">
                     <div className="flex justify-between items-center">
-                        <img
-                            src="/logo_dashboard.png"
-                            className="h-24"
-                            alt=""
-                        />
-                        <button className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:opacity-80">
+                        <Link to="/">
+                            <img
+                                src="/logo_dashboard.png"
+                                className="h-24"
+                                alt=""
+                            />
+                        </Link>
+                        <button
+                            onClick={() => navigate('/login')}
+                            className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:opacity-80"
+                        >
                             LOGOUT
                         </button>
                     </div>

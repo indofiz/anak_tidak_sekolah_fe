@@ -9,11 +9,17 @@ import {
     CardHeader,
     CardTitle,
 } from './ui/card'
+import { useNavigate } from 'react-router'
 
 export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<'div'>) {
+    const navigate = useNavigate()
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        navigate('/otp')
+    }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
@@ -24,7 +30,7 @@ export function LoginForm({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form onSubmit={onSubmit}>
                         <div className="grid gap-6">
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
