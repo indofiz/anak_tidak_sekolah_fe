@@ -21,79 +21,131 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { SekolahData, useSaveSekolahData } from '@/api/data-sekolah'
+import { useNavigate } from 'react-router'
+import { Textarea } from '@/components/ui/textarea'
+import { useAlasan } from '@/api/master-data/alasan'
+import { useAuthStore } from '@/store/login-store'
 
 const items = [
     {
-        id: 'tidak_mampu_biaya',
+        id: '1',
         label: 'Tidak mampu biaya sekolah',
     },
     {
-        id: 'bekerja',
-        label: 'Harus bekerja / membantu orang tua',
+        id: '2',
+        label: 'Harus bekerja/membantu orang tua',
     },
     {
-        id: 'kurang_minat',
+        id: '3',
         label: 'Kurang minat belajar',
     },
     {
-        id: 'jarak_sekolah',
+        id: '4',
         label: 'Jarak sekolah terlalu jauh',
     },
     {
-        id: 'pernikahan_dini',
-        label: 'Menikah di usia dini',
+        id: '5',
+        label: 'Menikah diusia dini',
     },
     {
-        id: 'disabilitas',
+        id: '6',
         label: 'Disabilitas atau kebutuhan khusus',
     },
     {
-        id: 'tidak_ada_sekolah',
-        label: 'Tidak tersedia sekolah di daerahnya',
+        id: '7',
+        label: 'Tidak bersedia sekolah di daerahnya',
     },
     {
-        id: 'orang_tua_tidak_izinkan',
+        id: '8',
         label: 'Orang tua tidak mengizinkan',
     },
     {
-        id: 'alasan_lain',
-        label: 'Alasan lainnya',
+        id: '999',
+        label: 'Alasan Lainnya',
     },
 ] as const
 
+interface FormDataSekolahProps {
+    initialData?: SekolahData | null
+    nik: string
+}
+
 const formSchema = z.object({
-    nama_sekolah: z.string().min(1),
-    npsn_sekolah: z.string().min(1),
-    tingkat: z.string(),
-    kelas: z.string().min(1),
-    tahun: z.string().min(1),
-    items: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: 'You have to select at least one item.',
-    }),
+    nama_sekolah: z.string().min(1, 'Nama sekolah tidak boleh kosong'),
+    npsn_sekolah: z.string().min(1, 'NPSN sekolah tidak boleh kosong'),
+    tingkat: z.string().min(1, 'Tingkat sekolah tidak boleh kosong'),
+    kelas: z.string().min(1, 'Kelas tidak boleh kosong'),
+    tahun_terakhir: z.string().min(1, 'Tahun tidak boleh kosong'),
+    alasan_tidak_sekolah: z
+        .array(z.string())
+        .refine((value) => value.some((item) => item), {
+            message: 'You have to select at least one item.',
+        }),
+    lainnya: z.string().optional(),
 })
 
-export default function FormDataSekolah() {
+export default function FormDataSekolah({
+    initialData,
+    nik,
+}: FormDataSekolahProps) {
+    const navigate = useNavigate()
+    const { user } = useAuthStore()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            items: ['tidak_mampu_biaya'],
+            nama_sekolah: initialData?.nama_sekolah || '',
+            npsn_sekolah: initialData?.npsn_sekolah || '',
+            tingkat: initialData?.tingkat || '',
+            kelas: initialData?.kelas || '',
+            tahun_terakhir: initialData?.tahun_terakhir?.toString() || '',
+            alasan_tidak_sekolah: initialData?.alasan_tidak_sekolah || [],
+            lainnya: initialData?.lainnya || '',
         },
     })
+    const mutation = useSaveSekolahData()
+
+    const { data: alasanData, isLoading: alasanIsLoading } = useAlasan({
+        token: user?.token || '',
+    })
+
+    const watchAlasan = form.watch('alasan_tidak_sekolah')
+    const isLainnyaSelected = watchAlasan.includes('999')
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(values, null, 2)}
-                    </code>
-                </pre>,
-                { style: { background: 'green', color: '#fff' } }
-            )
+            const formData = new FormData()
+
+            // Append all fields
+            formData.append('nik_anak', nik)
+            formData.append('nama_sekolah', values.nama_sekolah || '')
+            formData.append('npsn_sekolah', values.npsn_sekolah || '')
+            formData.append('tingkat', values.tingkat || '')
+            formData.append('kelas', values.kelas || '')
+            formData.append('tahun_terakhir', values.tahun_terakhir || '')
+            if (values.alasan_tidak_sekolah.length > 0) {
+                values.alasan_tidak_sekolah.forEach((item) => {
+                    formData.append('alasan_tidak_sekolah[]', item)
+                })
+            }
+            if (isLainnyaSelected && values.lainnya) {
+                formData.append('lainnya', values.lainnya)
+            }
+
+            // Execute mutation
+            mutation.mutate(formData, {
+                onSuccess: () => {
+                    toast.success('Data berhasil disimpan')
+                    navigate(`/dashboard/anak/${nik}/data-tindak-lanjut`)
+                },
+                onError: (error) => {
+                    toast.error(error.message)
+                },
+            })
         } catch (error) {
             console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            toast.error('Gagal menyimpan data. Silakan coba lagi.')
         }
     }
 
@@ -157,14 +209,20 @@ export default function FormDataSekolah() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="SD Sederajat">
-                                        SD Sederajat
+                                    <SelectItem value="PAUD">
+                                        PAUD / Sederajat
                                     </SelectItem>
-                                    <SelectItem value="SMP Sederajat">
-                                        SMP Sederajat
+                                    <SelectItem value="TK">
+                                        TK / Sederajat
                                     </SelectItem>
-                                    <SelectItem value="SMA Sederajat">
-                                        SMA Sederajat
+                                    <SelectItem value="SD">
+                                        SD / Sederajat
+                                    </SelectItem>
+                                    <SelectItem value="SMP">
+                                        SMP / Sederajat
+                                    </SelectItem>
+                                    <SelectItem value="SMA">
+                                        SMA / Sederajat
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
@@ -195,10 +253,10 @@ export default function FormDataSekolah() {
 
                 <FormField
                     control={form.control}
-                    name="tahun"
+                    name="tahun_terakhir"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tahun</FormLabel>
+                            <FormLabel>Tahun Terakhir</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : 2015"
@@ -213,7 +271,7 @@ export default function FormDataSekolah() {
 
                 <FormField
                     control={form.control}
-                    name="items"
+                    name="alasan_tidak_sekolah"
                     render={() => (
                         <FormItem>
                             <div className="mb-4">
@@ -225,56 +283,81 @@ export default function FormDataSekolah() {
                                     sekolah
                                 </FormDescription>
                             </div>
-                            {items.map((item) => (
-                                <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="items"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={item.id}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(
-                                                            item.id
-                                                        )}
-                                                        onCheckedChange={(
-                                                            checked
-                                                        ) => {
-                                                            return checked
-                                                                ? field.onChange(
-                                                                      [
-                                                                          ...field.value,
-                                                                          item.id,
-                                                                      ]
-                                                                  )
-                                                                : field.onChange(
-                                                                      field.value?.filter(
-                                                                          (
-                                                                              value
-                                                                          ) =>
-                                                                              value !==
-                                                                              item.id
+                            {alasanData?.data.map((item) => {
+                                const itemId = item.id.toString()
+                                return (
+                                    <FormField
+                                        key={itemId}
+                                        control={form.control}
+                                        name="alasan_tidak_sekolah"
+                                        render={({ field }) => {
+                                            return (
+                                                <FormItem
+                                                    key={itemId}
+                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(
+                                                                itemId
+                                                            )}
+                                                            disabled={
+                                                                alasanIsLoading
+                                                            }
+                                                            onCheckedChange={(
+                                                                checked
+                                                            ) => {
+                                                                return checked
+                                                                    ? field.onChange(
+                                                                          [
+                                                                              ...field.value,
+                                                                              itemId,
+                                                                          ]
                                                                       )
-                                                                  )
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal">
-                                                    {item.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
+                                                                    : field.onChange(
+                                                                          field.value?.filter(
+                                                                              (
+                                                                                  value
+                                                                              ) =>
+                                                                                  value !==
+                                                                                  itemId
+                                                                          )
+                                                                      )
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="text-sm font-normal">
+                                                        {item.alasan}
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )
+                                        }}
+                                    />
+                                )
+                            })}
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+
+                {isLainnyaSelected ? (
+                    <FormField
+                        control={form.control}
+                        name="lainnya"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Alasan Lain</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="contoh : Sakit keras, tidak mampu bayar biaya sekolah, dll."
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                ) : null}
                 <div className="flex justify-end">
                     <Button type="submit">Simpan Data</Button>
                 </div>

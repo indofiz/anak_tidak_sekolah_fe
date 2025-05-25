@@ -27,14 +27,23 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import { useSaveWaliData, WaliData } from '@/api/data-wali'
+import { useNavigate } from 'react-router'
+
+interface FormDataWaliProps {
+    initialData?: WaliData | null
+    nik: string
+}
 
 const formSchema = z.object({
-    nama_wali: z.string().min(1),
-    no_hp_wali: z.string().min(1),
-    pekerjaan: z.string(),
+    nama_wali: z.string().min(1, 'Nama Wali tidak boleh kosong'),
+    no_hp_wali: z.string().min(1, 'No. HP Wali tidak boleh kosong'),
+    pekerjaan: z.string().min(1, 'Pekerjaan tidak boleh kosong'),
 })
 
-export default function FormDataWali() {
+export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
+    const navigate = useNavigate()
+
     const pekerjaan = [
         { label: 'Dokter', value: 'dokter' },
         { label: 'Guru', value: 'guru' },
@@ -55,20 +64,38 @@ export default function FormDataWali() {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            nama_wali: initialData?.nama_wali || '',
+            no_hp_wali: initialData?.no_hp_wali || '',
+            pekerjaan: initialData?.pekerjaan || '',
+        },
     })
+
+    const mutation = useSaveWaliData()
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(values, null, 2)}
-                    </code>
-                </pre>
-            )
+            const formData = new FormData()
+
+            // Append all fields
+            formData.append('nik_anak', nik)
+            formData.append('nama_wali', values.nama_wali || '')
+            formData.append('no_hp_wali', values.no_hp_wali || '')
+            formData.append('pekerjaan', values.pekerjaan || '')
+
+            // Execute mutation
+            mutation.mutate(formData, {
+                onSuccess: () => {
+                    toast.success('Data berhasil disimpan')
+                    navigate(`/dashboard/anak/${nik}/data-sekolah`)
+                },
+                onError: (error) => {
+                    toast.error(error.message)
+                },
+            })
         } catch (error) {
             console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            toast.error('Gagal menyimpan data. Silakan coba lagi.')
         }
     }
 

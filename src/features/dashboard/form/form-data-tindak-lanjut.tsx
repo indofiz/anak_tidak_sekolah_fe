@@ -12,30 +12,65 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+    TindakLanjutData,
+    useSaveTindakLanjutData,
+} from '@/api/data-tindak-lanjut'
+import { useNavigate } from 'react-router'
 
+interface FormDataTindakLanjutProps {
+    initialData?: TindakLanjutData | null
+    nik: string
+}
 const formSchema = z.object({
-    bersedia: z.string(),
-    program_diikuti: z.string(),
+    bersedia: z.string().min(1, {
+        message: 'Pilih salah satu opsi',
+    }),
+    program: z.string().optional(),
+    catatan: z.string().optional(),
 })
 
-export default function FormDataTindakLanjut() {
+export default function FormDataTindakLanjut({
+    initialData,
+    nik,
+}: FormDataTindakLanjutProps) {
+    const navigate = useNavigate()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            bersedia: initialData?.bersedia || '',
+            program: initialData?.program || '',
+            catatan: initialData?.catatan || '',
+        },
     })
+
+    const mutation = useSaveTindakLanjutData()
+    const watchBersedia = form.watch('bersedia')
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values)
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(values, null, 2)}
-                    </code>
-                </pre>
-            )
+            const formData = new FormData()
+
+            // Append all fields
+            formData.append('nik_anak', nik)
+            formData.append('bersedia', values.bersedia || '')
+            formData.append('program', values.program || '')
+            formData.append('catatan', values.catatan || '')
+
+            // Execute mutation
+            mutation.mutate(formData, {
+                onSuccess: () => {
+                    toast.success('Data berhasil disimpan')
+                    navigate(`/dashboard/anak/${nik}/data-anak`)
+                },
+                onError: (error) => {
+                    toast.error(error.message)
+                },
+            })
         } catch (error) {
             console.error('Form submission error', error)
-            toast.error('Failed to submit the form. Please try again.')
+            toast.error('Gagal menyimpan data. Silakan coba lagi.')
         }
     }
 
@@ -57,10 +92,11 @@ export default function FormDataTindakLanjut() {
                                 <RadioGroup
                                     onValueChange={field.onChange}
                                     className="flex flex-col space-y-1"
+                                    defaultValue={field.value}
                                 >
                                     {[
-                                        ['Ya', 'ya'],
-                                        ['Tidak', 'tidak'],
+                                        ['Ya', '1'],
+                                        ['Tidak', '0'],
                                     ].map((option, index) => (
                                         <FormItem
                                             className="flex items-center space-x-3 space-y-0"
@@ -84,38 +120,60 @@ export default function FormDataTindakLanjut() {
                     )}
                 />
 
+                {watchBersedia === '1' ? (
+                    <FormField
+                        control={form.control}
+                        name="program"
+                        render={({ field }) => (
+                            <FormItem className="space-y-3">
+                                <FormLabel>Program yang diikuti</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={field.onChange}
+                                        className="flex flex-col space-y-1"
+                                        defaultValue={field.value}
+                                    >
+                                        {[
+                                            ['Paud', 'PAUD'],
+                                            ['Paket A', 'A'],
+                                            ['Paket B', 'B'],
+                                            ['Paket C', 'C'],
+                                        ].map((option, index) => (
+                                            <FormItem
+                                                className="flex items-center space-x-3 space-y-0"
+                                                key={index}
+                                            >
+                                                <FormControl>
+                                                    <RadioGroupItem
+                                                        value={option[1]}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    {option[0]}
+                                                </FormLabel>
+                                            </FormItem>
+                                        ))}
+                                    </RadioGroup>
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                ) : null}
+
                 <FormField
                     control={form.control}
-                    name="program_diikuti"
+                    name="catatan"
                     render={({ field }) => (
                         <FormItem className="space-y-3">
-                            <FormLabel>Program yang diikuti</FormLabel>
+                            <FormLabel>Catatan</FormLabel>
                             <FormControl>
-                                <RadioGroup
-                                    onValueChange={field.onChange}
-                                    className="flex flex-col space-y-1"
-                                >
-                                    {[
-                                        ['Paud', 'paud'],
-                                        ['Paket A', 'paket_a'],
-                                        ['Paket B', 'paket_b'],
-                                        ['Paket C', 'paket_c'],
-                                    ].map((option, index) => (
-                                        <FormItem
-                                            className="flex items-center space-x-3 space-y-0"
-                                            key={index}
-                                        >
-                                            <FormControl>
-                                                <RadioGroupItem
-                                                    value={option[1]}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                {option[0]}
-                                            </FormLabel>
-                                        </FormItem>
-                                    ))}
-                                </RadioGroup>
+                                <textarea
+                                    {...field}
+                                    placeholder="Masukkan catatan jika ada"
+                                    className="w-full p-2 border rounded-md"
+                                />
                             </FormControl>
 
                             <FormMessage />

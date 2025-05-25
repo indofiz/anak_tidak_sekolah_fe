@@ -14,15 +14,9 @@ type DateFormat = 'days' | 'months' | 'years'
 type TimeFormat = 'hours' | 'minutes' | 'seconds' | 'am/pm'
 
 type DateTimeArray<T extends DateFormat | TimeFormat> = T[]
-type DateTimeFormatDefaults = [
-    DateTimeArray<DateFormat>,
-    DateTimeArray<TimeFormat>
-]
+type DateTimeFormatDefaults = [DateTimeArray<DateFormat>]
 
-const DEFAULTS = [
-    ['months', 'days', 'years'],
-    ['hours', 'minutes', 'am/pm'],
-] as DateTimeFormatDefaults
+const DEFAULTS = [['months', 'days', 'years']] as DateTimeFormatDefaults
 
 type TimescapeReturn = ReturnType<typeof useTimescape>
 type InputPlaceholders = Record<DateFormat | TimeFormat, string>
@@ -86,8 +80,6 @@ const DatetimeGrid = forwardRef<
                                                     {
                                                         'min-w-12':
                                                             unit === 'years',
-                                                        'bg-foreground/15':
-                                                            unit === 'am/pm',
                                                     }
                                                 )}
                                                 {...timescape.getInputProps(
@@ -119,17 +111,6 @@ const DatetimeGrid = forwardRef<
                                         </React.Fragment>
                                     ))
                                   : null}
-                              {format[1]?.length && !i ? (
-                                  // date-time separator - only if both date and time are present
-                                  <span
-                                      className={cn(
-                                          timePickerSeparatorBase,
-                                          'opacity-30 text-xl'
-                                      )}
-                                  >
-                                      |
-                                  </span>
-                              ) : null}
                           </React.Fragment>
                       ))
                     : null}

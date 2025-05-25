@@ -10,13 +10,13 @@ import { Outlet } from 'react-router'
 import Homepage from './pages/homepage'
 import LayoutFormAnak from './features/dashboard/edit-anak/layout'
 import CardForm from './features/dashboard/edit-anak/card'
-import FormDataAnak from './features/dashboard/form/form-data-anak'
-import FormDataWali from './features/dashboard/form/form-data-wali'
-import FormDataSekolah from './features/dashboard/form/form-data-sekolah'
-import FormDataTindakLanjut from './features/dashboard/form/form-data-tindak-lanjut'
 import Dashboard from './features/dashboard/beranda'
 import { TableAnakFull } from './features/dashboard/list-anak/table-anak-full'
 import { ProtectedRoute } from './pages/protected-route'
+import ContainerDataAnak from './features/dashboard/edit-anak/container-form/form-anak'
+import ContainerDataWali from './features/dashboard/edit-anak/container-form/form-wali'
+import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
+import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
 
 const router = createBrowserRouter([
     {
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Anak"
                                         description="Isi semua yang terkait dengan data anak."
-                                        content={<FormDataAnak />}
+                                        content={<ContainerDataAnak />}
                                     />
                                 ),
                             },
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Wali"
                                         description="Isi semua yang terkait dengan data wali."
-                                        content={<FormDataWali />}
+                                        content={<ContainerDataWali />}
                                     />
                                 ),
                             },
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Sekolah"
                                         description="Isi semua yang terkait dengan data sekolah."
-                                        content={<FormDataSekolah />}
+                                        content={<ContainerDataSekolah />}
                                     />
                                 ),
                             },
@@ -93,7 +93,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Tindak Lanjut"
                                         description="Isi semua yang terkait dengan data tindak lanjut."
-                                        content={<FormDataTindakLanjut />}
+                                        content={<ContainerDataTidakLanjut />}
                                     />
                                 ),
                             },
@@ -110,7 +110,7 @@ const queryClient = new QueryClient()
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <Toaster />
+            <Toaster richColors position="top-center" />
             <RouterProvider router={router} />
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
