@@ -1,4 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'sonner'
+
 import LoginPage from './pages/login'
 import OtpPage from './pages/otp-page'
 import DashboardPage from './pages/dashboard'
@@ -12,6 +16,7 @@ import FormDataSekolah from './features/dashboard/form/form-data-sekolah'
 import FormDataTindakLanjut from './features/dashboard/form/form-data-tindak-lanjut'
 import Dashboard from './features/dashboard/beranda'
 import { TableAnakFull } from './features/dashboard/list-anak/table-anak-full'
+import { ProtectedRoute } from './pages/protected-route'
 
 const router = createBrowserRouter([
     {
@@ -34,7 +39,11 @@ const router = createBrowserRouter([
             },
             {
                 path: 'dashboard',
-                element: <DashboardPage />,
+                element: (
+                    <ProtectedRoute>
+                        <DashboardPage />
+                    </ProtectedRoute>
+                ),
                 children: [
                     {
                         index: true,
@@ -96,8 +105,16 @@ const router = createBrowserRouter([
     },
 ])
 
+const queryClient = new QueryClient()
+
 function App() {
-    return <RouterProvider router={router} />
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Toaster />
+            <RouterProvider router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    )
 }
 
 export default App
