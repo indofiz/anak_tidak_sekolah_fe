@@ -26,45 +26,7 @@ import { useNavigate } from 'react-router'
 import { Textarea } from '@/components/ui/textarea'
 import { useAlasan } from '@/api/master-data/alasan'
 import { useAuthStore } from '@/store/login-store'
-
-const items = [
-    {
-        id: '1',
-        label: 'Tidak mampu biaya sekolah',
-    },
-    {
-        id: '2',
-        label: 'Harus bekerja/membantu orang tua',
-    },
-    {
-        id: '3',
-        label: 'Kurang minat belajar',
-    },
-    {
-        id: '4',
-        label: 'Jarak sekolah terlalu jauh',
-    },
-    {
-        id: '5',
-        label: 'Menikah diusia dini',
-    },
-    {
-        id: '6',
-        label: 'Disabilitas atau kebutuhan khusus',
-    },
-    {
-        id: '7',
-        label: 'Tidak bersedia sekolah di daerahnya',
-    },
-    {
-        id: '8',
-        label: 'Orang tua tidak mengizinkan',
-    },
-    {
-        id: '999',
-        label: 'Alasan Lainnya',
-    },
-] as const
+import { useQueryClient } from '@tanstack/react-query'
 
 interface FormDataSekolahProps {
     initialData?: SekolahData | null
@@ -105,6 +67,7 @@ export default function FormDataSekolah({
         },
     })
     const mutation = useSaveSekolahData()
+    const queryClient = useQueryClient()
 
     const { data: alasanData, isLoading: alasanIsLoading } = useAlasan({
         token: user?.token || '',
@@ -137,6 +100,10 @@ export default function FormDataSekolah({
             mutation.mutate(formData, {
                 onSuccess: () => {
                     toast.success('Data berhasil disimpan')
+                    queryClient.invalidateQueries({ queryKey: ['anakList'] })
+                    queryClient.invalidateQueries({
+                        queryKey: ['sekolah-data', nik],
+                    })
                     navigate(`/dashboard/anak/${nik}/data-tindak-lanjut`)
                 },
                 onError: (error) => {

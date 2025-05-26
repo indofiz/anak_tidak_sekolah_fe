@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataSekolah from '../../form/form-data-sekolah'
 
-export const useSekolahData = (params: SekolahDetailParams) => {
+const useSekolahData = (params: SekolahDetailParams) => {
     return useQuery<SekolahResponse, SekolahError>({
         queryKey: ['sekolah-data', params.nik],
         queryFn: () => {

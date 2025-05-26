@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 export interface WaliData {
     nik_anak?: string | null
     nama_wali?: string | null
-    no_hp_wali?: string | null
+    no_hp?: string | null
     pekerjaan?: string | null
     created_at?: string | null
     created_by?: string | null
@@ -44,6 +44,7 @@ export const fetchWaliData = async (
     )
 
     const data = await response.json()
+    console.log(data)
 
     if (response.status === 404) {
         throw {

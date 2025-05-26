@@ -26,11 +26,13 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/login-store'
 import { UserPen, UserRoundPlus } from 'lucide-react'
 import { useState } from 'react'
+import { statusAnak } from '@/lib/status'
 
 const searchSchema = z.object({
     nik: z
         .string()
-        .min(1, 'NIK harus diisi')
+        .min(16, 'Nik harus 16 digit')
+        .max(16, 'Nik harus 16 digit')
         .regex(/^\d+$/, 'NIK harus berupa angka'),
 })
 
@@ -41,12 +43,6 @@ export function FormCariAnak() {
 
     const navigate = useNavigate()
     const { user } = useAuthStore()
-
-    if (!user) {
-        toast.error('Anda harus login terlebih dahulu')
-        navigate('/login')
-        return null
-    }
 
     const form = useForm<SearchFormValues>({
         resolver: zodResolver(searchSchema),
@@ -150,8 +146,13 @@ export function FormCariAnak() {
                         {isFetching ? 'Mencari...' : 'Periksa NIK'}
                     </Button>
                     {isError && (
-                        <div className="text-red-600 text-sm text-center mt-2">
-                            {error.message}
+                        <div className="text-red-600 mt-4 text-sm text-center mt-2">
+                            <img
+                                src="/person.png"
+                                className="w-32 mx-auto"
+                                alt=""
+                            />
+                            <p className="mt-2">{error.message}</p>
                         </div>
                     )}
                 </div>
@@ -185,9 +186,9 @@ export function FormCariAnak() {
                             <div className="flex justify-between">
                                 <span className="text-gray-600">Status:</span>
                                 <span className="text-gray-900">
-                                    {data.data?.status === '0'
-                                        ? 'Tidak Aktif'
-                                        : 'Aktif'}
+                                    {data?.data?.status
+                                        ? statusAnak[+data.data?.status]
+                                        : 'Tidak Diketahui'}
                                 </span>
                             </div>
                             {/* Add more fields as needed */}

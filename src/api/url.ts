@@ -10,6 +10,7 @@ export const checkToken = baseUrl + 'otp/check-token'
 export const detailLengkapAnak = baseUrl + 'anak/detail-all'
 export const cekNikAnak = baseUrl + 'anak/check'
 export const listAnak = baseUrl + 'anak/list'
+export const deleteAnak = baseUrl + 'anak/delete'
 
 export const saveAnak = baseUrl + 'anak/save'
 

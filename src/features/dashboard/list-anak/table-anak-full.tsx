@@ -27,171 +27,38 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-
-const childrenData = [
-    {
-        namaAnak: 'Ahmad Dani',
-        namaWali: 'Budi Santoso',
-        jenisKelamin: 'Laki-laki',
-        usia: 5,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Siti Aminah',
-        namaWali: 'Rina Wijaya',
-        jenisKelamin: 'Perempuan',
-        usia: 7,
-        bersedia: 'Tidak',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Maya Indah',
-        namaWali: 'Dewi Kusuma',
-        jenisKelamin: 'Perempuan',
-        usia: 6,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Rizky Pratama',
-        namaWali: 'Andi Setiawan',
-        jenisKelamin: 'Laki-laki',
-        usia: 8,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Dian Kusuma',
-        namaWali: 'Agus Prabowo',
-        jenisKelamin: 'Perempuan',
-        usia: 4,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Fajar Nugraha',
-        namaWali: 'Sri Lestari',
-        jenisKelamin: 'Laki-laki',
-        usia: 9,
-        bersedia: 'Tidak',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Citra Dewi',
-        namaWali: 'Eko Prasetyo',
-        jenisKelamin: 'Perempuan',
-        usia: 5,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Hendra Putra',
-        namaWali: 'Linda Suryani',
-        jenisKelamin: 'Laki-laki',
-        usia: 7,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Nur Hasanah',
-        namaWali: 'Rudi Hermawan',
-        jenisKelamin: 'Perempuan',
-        usia: 6,
-        bersedia: 'Tidak',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Aditya Saputra',
-        namaWali: 'Yuni Kartika',
-        jenisKelamin: 'Laki-laki',
-        usia: 8,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Rina Marlina',
-        namaWali: 'Ahmad Yani',
-        jenisKelamin: 'Perempuan',
-        usia: 4,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Bayu Anggara',
-        namaWali: 'Dwi Rahayu',
-        jenisKelamin: 'Laki-laki',
-        usia: 10,
-        bersedia: 'Tidak',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Laras Putri',
-        namaWali: 'Hadi Susanto',
-        jenisKelamin: 'Perempuan',
-        usia: 5,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Dimas Aditya',
-        namaWali: 'Siska Permata',
-        jenisKelamin: 'Laki-laki',
-        usia: 6,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Wulan Sari',
-        namaWali: 'Joko Widodo',
-        jenisKelamin: 'Perempuan',
-        usia: 7,
-        bersedia: 'Tidak',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Irfan Maulana',
-        namaWali: 'Ani Rismaya',
-        jenisKelamin: 'Laki-laki',
-        usia: 9,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Salsa Bella',
-        namaWali: 'Dodi Prakoso',
-        jenisKelamin: 'Perempuan',
-        usia: 5,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Rangga Pratama',
-        namaWali: 'Eva Marlina',
-        jenisKelamin: 'Laki-laki',
-        usia: 8,
-        bersedia: 'Tidak',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Dinda Kirana',
-        namaWali: 'Firman Syah',
-        jenisKelamin: 'Perempuan',
-        usia: 6,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Ardi Nugroho',
-        namaWali: 'Gita Wulandari',
-        jenisKelamin: 'Laki-laki',
-        usia: 7,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-]
+import { useAnakList, useDeleteAnak } from '@/api/list-anak'
+import { useAuthStore } from '@/store/login-store'
+import { Link } from 'react-router'
+import { toast } from 'sonner'
+import { statusAnak, statusClassName } from '@/lib/status'
+import { cn } from '@/lib/utils'
 
 export function TableAnakFull() {
+    const { user } = useAuthStore()
+    const { data: dataAnak, isLoading } = useAnakList({
+        token: user?.token,
+    })
+
+    const deleteMutation = useDeleteAnak()
+
+    const handleDelete = (nik: string) => {
+        deleteMutation.mutate(nik, {
+            onSuccess: () => {
+                toast.success('Anak berhasil dihapus')
+                // Optionally show a success message or perform other actions
+            },
+            onError: (error) => {
+                toast.error('Gagal menghapus anak: ' + error.message)
+                console.error('Error deleting anak:', error)
+            },
+        })
+    }
+
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>
+    }
+
     return (
         <Card className="col-span-12 shadow-none border-0">
             <CardHeader>
@@ -230,32 +97,35 @@ export function TableAnakFull() {
                         </TableRow>
                     </TableHeader>
                     <TableBody className="font-normal">
-                        {childrenData.map((anak) => (
-                            <TableRow key={anak.namaAnak}>
+                        {dataAnak?.data?.data?.data.map((anak) => (
+                            <TableRow key={anak.nama_anak}>
                                 <TableCell className="font-medium">
-                                    {anak.namaAnak}
+                                    {anak.nama_anak}
                                 </TableCell>
                                 <TableCell className="font-light">
-                                    {anak.namaWali}
+                                    {anak.nama_wali}
                                 </TableCell>
                                 <TableCell className="font-light">
-                                    {anak.jenisKelamin}
+                                    {anak.jenis_kelamin}
                                 </TableCell>
                                 <TableCell className="font-light">
                                     {anak.usia} Tahun
                                 </TableCell>
                                 <TableCell className="font-light">
-                                    {anak.bersedia}
+                                    {anak.bersedia == '1' ? 'Ya' : 'Tidak'}
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <span
-                                        className={`px-2 text-xs py-1 rounded ${
-                                            anak.status === 'Selesai'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-yellow-100 text-yellow-800'
-                                        }`}
+                                        className={cn(
+                                            `px-2 text-xs py-1 rounded `,
+                                            statusClassName[+anak.status]
+                                                ? statusClassName[+anak.status]
+                                                : 'bg-gray-100 text-gray-800'
+                                        )}
                                     >
-                                        {anak.status}
+                                        {anak.status
+                                            ? statusAnak[+anak.status]
+                                            : 'Tidak Diketahui'}
                                     </span>
                                 </TableCell>
                                 <TableCell className="text-right space-x-1">
@@ -265,9 +135,14 @@ export function TableAnakFull() {
                                     <Button
                                         variant="outline"
                                         className="text-xs font-normal"
+                                        asChild
                                     >
-                                        <Pencil size={16} />
-                                        Edit
+                                        <Link
+                                            to={`/dashboard/anak/${anak.nik}/data-anak`}
+                                        >
+                                            <Pencil size={16} />
+                                            Edit
+                                        </Link>
                                     </Button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
@@ -295,8 +170,18 @@ export function TableAnakFull() {
                                                 <AlertDialogCancel>
                                                     Batal
                                                 </AlertDialogCancel>
-                                                <AlertDialogAction>
-                                                    Ya, Hapus
+                                                <AlertDialogAction asChild>
+                                                    <Button
+                                                        variant={'destructive'}
+                                                        className="bg-red-500 text-white"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                anak.nik
+                                                            )
+                                                        }
+                                                    >
+                                                        Ya, Hapus
+                                                    </Button>
                                                 </AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>

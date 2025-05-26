@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router'
 import { useKategori } from '@/api/master-data/kategori'
 import { useAuthStore } from '@/store/login-store'
 import { useSubKategori } from '@/api/master-data/sub-kategori'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface FormDataAnakProps {
     initialData?: AnakData | null
@@ -37,14 +38,10 @@ interface FormDataAnakProps {
 const formSchema = z.object({
     nik: z
         .string()
-        // .min(16, 'NIK harus 16 digit')
-        // .max(16, 'NIK harus 16 digit')
+        .min(16, 'NIK harus 16 digit')
         .regex(/^\d+$/, 'Harus berupa angka'),
     nama_anak: z.string().min(3, 'Nama anak minimal 3 karakter'),
-    nisn: z
-        .string()
-        .regex(/^\d*$/, 'Harus berupa angka')
-        .min(3, 'NISN minimal 3 karakter'),
+    nisn: z.string().regex(/^\d*$/, 'Harus berupa angka').optional(),
     jenis_kelamin: z.string().min(1, 'Jenis kelamin harus dipilih'),
     tempat_lahir: z.string().min(3, 'Tempat lahir minimal 3 karakter'),
     tgl_lahir: z.coerce
@@ -75,12 +72,14 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                 : new Date(),
             alamat_kk: initialData?.alamat_kk || '',
             alamat_domisili: initialData?.alamat_domisili || '',
-            id_kategori: initialData?.id_sub_kategori || '',
+            id_kategori: initialData?.id_kategori || '',
             id_sub_kategori: initialData?.id_sub_kategori || '',
         },
     })
 
     const mutation = useSaveAnakData()
+    const queryClient = useQueryClient()
+
     const watchKategori = form.watch('id_kategori')
     const { data: kategoriData, isLoading: isLoadingKategori } = useKategori({
         token: user?.token || '',
@@ -90,8 +89,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
             token: user?.token || '',
             kategori: watchKategori || '',
         })
-
-    console.log(subKategoriData)
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
@@ -124,6 +121,11 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
             mutation.mutate(formData, {
                 onSuccess: () => {
                     toast.success('Data berhasil disimpan')
+                    // Invalidate queries to refresh data
+                    queryClient.invalidateQueries({ queryKey: ['anakList'] })
+                    queryClient.invalidateQueries({
+                        queryKey: ['anak-data', values.nik],
+                    })
                     navigate(`/dashboard/anak/${values.nik}/data-wali`)
                 },
                 onError: (error) => {
@@ -317,7 +319,7 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                             <FormLabel>Kategori Pendataan</FormLabel>
                             <Select
                                 onValueChange={field.onChange}
-                                defaultValue={field.value || ''}
+                                defaultValue={field.value?.toString() || ''}
                                 disabled={isLoadingKategori}
                             >
                                 <FormControl>
@@ -350,7 +352,7 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                             <FormLabel>Sub Kategori Pendataan</FormLabel>
                             <Select
                                 onValueChange={field.onChange}
-                                defaultValue={field.value || ''}
+                                defaultValue={field.value.toString() || ''}
                                 disabled={isLoadingSubKategori}
                             >
                                 <FormControl>

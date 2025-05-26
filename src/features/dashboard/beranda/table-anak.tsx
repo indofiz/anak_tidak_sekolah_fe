@@ -1,3 +1,4 @@
+import { useAnakList } from '@/api/list-anak'
 import {
     Card,
     CardContent,
@@ -13,51 +14,18 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-
-const childrenData = [
-    {
-        namaAnak: 'Ahmad Dani',
-        namaWali: 'Budi Santoso',
-        jenisKelamin: 'Laki-laki',
-        usia: 5,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Siti Aminah',
-        namaWali: 'Rina Wijaya',
-        jenisKelamin: 'Perempuan',
-        usia: 7,
-        bersedia: 'Tidak',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Maya Indah',
-        namaWali: 'Dewi Kusuma',
-        jenisKelamin: 'Perempuan',
-        usia: 6,
-        bersedia: 'Ya',
-        status: 'Menunggu',
-    },
-    {
-        namaAnak: 'Rizky Pratama',
-        namaWali: 'Andi Setiawan',
-        jenisKelamin: 'Laki-laki',
-        usia: 8,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-    {
-        namaAnak: 'Rizky Pratama',
-        namaWali: 'Andi Setiawan',
-        jenisKelamin: 'Laki-laki',
-        usia: 8,
-        bersedia: 'Ya',
-        status: 'Selesai',
-    },
-]
+import { statusAnak, statusClassName } from '@/lib/status'
+import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/store/login-store'
 
 export function TableAnak() {
+    const { user } = useAuthStore()
+    const { data: anakData, isLoading } = useAnakList({
+        token: user?.token || '',
+    })
+    if (isLoading) {
+        return <div className="text-center">Loading...</div>
+    }
     return (
         <Card className="w-full shadow-none">
             <CardHeader>
@@ -79,24 +47,29 @@ export function TableAnak() {
                         </TableRow>
                     </TableHeader>
                     <TableBody className="font-normal">
-                        {childrenData.map((anak) => (
-                            <TableRow key={anak.namaAnak}>
+                        {anakData?.data?.data?.data.map((anak) => (
+                            <TableRow key={anak.nama_anak}>
                                 <TableCell className="font-medium">
-                                    {anak.namaAnak}
+                                    {anak.nama_anak}
                                 </TableCell>
-                                <TableCell>{anak.namaWali}</TableCell>
-                                <TableCell>{anak.jenisKelamin}</TableCell>
+                                <TableCell>{anak.nama_wali}</TableCell>
+                                <TableCell>{anak.jenis_kelamin}</TableCell>
                                 <TableCell>{anak.usia} Tahun</TableCell>
-                                <TableCell>{anak.bersedia}</TableCell>
+                                <TableCell>
+                                    {anak.bersedia == '1' ? 'Ya' : 'Tidak'}
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <span
-                                        className={`px-2 text-xs py-1 rounded ${
-                                            anak.status === 'Selesai'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-yellow-100 text-yellow-800'
-                                        }`}
+                                        className={cn(
+                                            `px-2 text-xs py-1 rounded`,
+                                            anak.status
+                                                ? statusClassName[+anak.status]
+                                                : 'bg-gray-100 text-gray-800'
+                                        )}
                                     >
-                                        {anak.status}
+                                        {anak.status
+                                            ? statusAnak[+anak.status]
+                                            : null}
                                     </span>
                                 </TableCell>
                             </TableRow>

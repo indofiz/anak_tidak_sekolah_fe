@@ -1,6 +1,6 @@
 const Angka = () => {
     return (
-        <div className="col-span-4 border text-center rounded-lg px-8 py-4">
+        <div className="col-span-12 md:col-span-4 border text-center rounded-lg px-8 py-4">
             <div className="text-5xl font-semibold mb-4 ">24</div>
             <div className="text-center">
                 <img src={'/icon-child.png'} className="mx-auto" alt="" />

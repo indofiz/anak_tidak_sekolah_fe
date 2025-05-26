@@ -29,6 +29,7 @@ import {
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useSaveWaliData, WaliData } from '@/api/data-wali'
 import { useNavigate } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface FormDataWaliProps {
     initialData?: WaliData | null
@@ -37,7 +38,7 @@ interface FormDataWaliProps {
 
 const formSchema = z.object({
     nama_wali: z.string().min(1, 'Nama Wali tidak boleh kosong'),
-    no_hp_wali: z.string().min(1, 'No. HP Wali tidak boleh kosong'),
+    no_hp: z.string().min(1, 'No. HP Wali tidak boleh kosong'),
     pekerjaan: z.string().min(1, 'Pekerjaan tidak boleh kosong'),
 })
 
@@ -66,12 +67,13 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             nama_wali: initialData?.nama_wali || '',
-            no_hp_wali: initialData?.no_hp_wali || '',
+            no_hp: initialData?.no_hp || '',
             pekerjaan: initialData?.pekerjaan || '',
         },
     })
 
     const mutation = useSaveWaliData()
+    const queryClient = useQueryClient()
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
@@ -80,13 +82,17 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
             // Append all fields
             formData.append('nik_anak', nik)
             formData.append('nama_wali', values.nama_wali || '')
-            formData.append('no_hp_wali', values.no_hp_wali || '')
+            formData.append('no_hp', values.no_hp || '')
             formData.append('pekerjaan', values.pekerjaan || '')
 
             // Execute mutation
             mutation.mutate(formData, {
                 onSuccess: () => {
                     toast.success('Data berhasil disimpan')
+                    queryClient.invalidateQueries({ queryKey: ['anakList'] })
+                    queryClient.invalidateQueries({
+                        queryKey: ['wali-data', nik],
+                    })
                     navigate(`/dashboard/anak/${nik}/data-sekolah`)
                 },
                 onError: (error) => {
@@ -126,7 +132,7 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
 
                 <FormField
                     control={form.control}
-                    name="no_hp_wali"
+                    name="no_hp"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>No. HP Wali</FormLabel>

@@ -14,11 +14,11 @@ interface CardFormProps {
 const CardForm: React.FC<CardFormProps> = ({ title, description, content }) => {
     return (
         <Card className="shadow-none border-0 px-0 py-4 w-full">
-            <CardHeader>
+            <CardHeader className="px-2 md:px-4">
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent>{content}</CardContent>
+            <CardContent className="px-2 md:px-4">{content}</CardContent>
         </Card>
     )
 }

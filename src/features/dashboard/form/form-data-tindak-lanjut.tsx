@@ -17,6 +17,7 @@ import {
     useSaveTindakLanjutData,
 } from '@/api/data-tindak-lanjut'
 import { useNavigate } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface FormDataTindakLanjutProps {
     initialData?: TindakLanjutData | null
@@ -46,6 +47,7 @@ export default function FormDataTindakLanjut({
     })
 
     const mutation = useSaveTindakLanjutData()
+    const queryClient = useQueryClient()
     const watchBersedia = form.watch('bersedia')
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -62,6 +64,10 @@ export default function FormDataTindakLanjut({
             mutation.mutate(formData, {
                 onSuccess: () => {
                     toast.success('Data berhasil disimpan')
+                    queryClient.invalidateQueries({ queryKey: ['anakList'] })
+                    queryClient.invalidateQueries({
+                        queryKey: ['tindak-lanjut-data', nik],
+                    })
                     navigate(`/dashboard/anak/${nik}/data-anak`)
                 },
                 onError: (error) => {
@@ -86,7 +92,7 @@ export default function FormDataTindakLanjut({
                     render={({ field }) => (
                         <FormItem className="space-y-3">
                             <FormLabel>
-                                Bersedia mengikuti pendidikan informal
+                                Bersedia mengikuti pendidikan nonformal
                             </FormLabel>
                             <FormControl>
                                 <RadioGroup

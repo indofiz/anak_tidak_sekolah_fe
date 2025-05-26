@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataWali from '../../form/form-data-wali'
 
-export const useWaliData = (params: WaliDetailParams) => {
+const useWaliData = (params: WaliDetailParams) => {
     return useQuery<WaliResponse, WaliError>({
         queryKey: ['wali-data', params.nik],
         queryFn: () => {

@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataAnak from '../../form/form-data-anak'
 
-export const useAnakData = (params: AnakDetailParams) => {
+const useAnakData = (params: AnakDetailParams) => {
     return useQuery<SuccessResponse, ErrorResponse>({
         queryKey: ['anak-data', params.nik],
         queryFn: () => {

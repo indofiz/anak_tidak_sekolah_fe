@@ -45,7 +45,7 @@ export const fetchSubKategoriList = async (
 
 export const useSubKategori = (params: ParamsSubKategori) => {
     return useQuery<SubKategoriResponse, SubKategoriError>({
-        queryKey: ['sub-kategori'],
+        queryKey: ['sub-kategori', params.kategori],
         queryFn: () => {
             if (!params.token) throw new Error('Token tidak tersedia')
             return fetchSubKategoriList(params)

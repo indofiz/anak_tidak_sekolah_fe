@@ -12,11 +12,11 @@ const Dashboard = () => {
                 <Angka />
             </div>
             {/* FILTER */}
-            <div className="grid grid-cols-12 gap-4 mt-12">
-                <div className="col-span-8">
+            <div className="grid grid-cols-12 gap-4 mt-4 md:mt-12">
+                <div className="col-span-12 md:col-span-8">
                     <TableAnak />
                 </div>
-                <div className="col-span-4 flex flex-col gap-4">
+                <div className="col-span-12 md:col-span-4 flex flex-col gap-4">
                     <ChartUsia />
                     <ChartJenjang />
                 </div>

@@ -9,9 +9,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataTindakLanjut from '../../form/form-data-tindak-lanjut'
 
-export const useTindakLanjutData = (params: TindakLanjutDetailParams) => {
+const useTindakLanjutData = (params: TindakLanjutDetailParams) => {
     return useQuery<TindakLanjutResponse, TindakLanjutError>({
-        queryKey: ['wali-data', params.nik],
+        queryKey: ['tindak-lanjut-data', params.nik],
         queryFn: () => {
             if (!params.token) throw new Error('Token tidak tersedia')
             return fetchTindakLanjutData(params)
