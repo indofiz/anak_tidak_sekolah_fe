@@ -19,7 +19,12 @@ const DashboardPage = () => {
         }
     }, [navigate])
 
-    const isActive = (path: string) => location.pathname === path
+    const isActive = (path: string) => {
+        if (path === '/dashboard') {
+            return location.pathname === path
+        }
+        return location.pathname.startsWith(path)
+    }
 
     const handleLogout = () => {
         clearUser()

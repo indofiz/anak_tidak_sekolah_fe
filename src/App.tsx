@@ -17,12 +17,13 @@ import ContainerDataAnak from './features/dashboard/edit-anak/container-form/for
 import ContainerDataWali from './features/dashboard/edit-anak/container-form/form-wali'
 import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
 import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
+import NotFoundPage from './pages/404'
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Outlet />,
-        errorElement: <div>Not Found</div>,
+        errorElement: <NotFoundPage />,
 
         children: [
             {
