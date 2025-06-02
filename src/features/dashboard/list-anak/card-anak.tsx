@@ -1,8 +1,9 @@
 import { Anak } from '@/api/list-anak'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { ChevronDown, Eye, Link, Pencil, User2 } from 'lucide-react'
+import { ChevronDown, Eye, Pencil, Trash2, User2 } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router'
 
 const CardAnak = ({ anak }: { anak: Anak }) => {
     const [open, setOpen] = useState(false)
@@ -70,13 +71,16 @@ const CardAnak = ({ anak }: { anak: Anak }) => {
                                 {anak.kelas || '-'}
                             </span>
                         </div>
-                        <div>
-                            <Button variant="outline" size={'icon'}>
-                                <Eye size={16} />
+                        <div className="flex gap-2 mt-2">
+                            <Button
+                                variant="outline"
+                                className="font-medium flex-1"
+                            >
+                                <Eye size={16} /> Detail
                             </Button>
                             <Button
                                 variant="outline"
-                                className="text-xs font-normal"
+                                className="font-medium flex-1"
                                 asChild
                             >
                                 <Link
@@ -85,6 +89,13 @@ const CardAnak = ({ anak }: { anak: Anak }) => {
                                     <Pencil size={16} />
                                     Edit
                                 </Link>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="font-medium bg-red-100 text-red-500 border-red-200"
+                                size={'icon'}
+                            >
+                                <Trash2 size={16} />
                             </Button>
                         </div>
                     </>
