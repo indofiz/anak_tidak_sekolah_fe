@@ -16,7 +16,7 @@ import { useAuthStore } from '@/store/login-store'
 import { toast } from 'sonner'
 
 export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
-    const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
+    const [otp, setOtp] = useState<string[]>(Array(4).fill(''))
 
     const navigate = useNavigate()
     const location = useLocation()
@@ -46,7 +46,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
             toast.error('Nomor telepon tidak ditemukan')
             return
         }
-        if (otp.length == 6 && otp.every((digit) => digit !== '') && mobile) {
+        if (otp.length == 4 && otp.every((digit) => digit !== '') && mobile) {
             const otpString = otp.join('')
             mutation.mutate({ mobile, otp: otpString })
         }

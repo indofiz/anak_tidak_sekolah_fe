@@ -36,7 +36,14 @@ const ContainerDataAnak = () => {
 
     return (
         <div>
-            <FormDataAnak initialData={data?.data} />
+            <FormDataAnak
+                initialData={{
+                    ...data?.data,
+                    nik: id || '',
+                    id_kategori: data?.data.id_kategori?.toString(),
+                    id_sub_kategori: data?.data.id_sub_kategori?.toString(),
+                }}
+            />
         </div>
     )
 }

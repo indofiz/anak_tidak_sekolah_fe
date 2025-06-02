@@ -30,6 +30,8 @@ import { useKategori } from '@/api/master-data/kategori'
 import { useAuthStore } from '@/store/login-store'
 import { useSubKategori } from '@/api/master-data/sub-kategori'
 import { useQueryClient } from '@tanstack/react-query'
+import { cn } from '@/lib/utils'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface FormDataAnakProps {
     initialData?: AnakData | null
@@ -51,9 +53,20 @@ const formSchema = z.object({
         }),
     alamat_kk: z.string().min(3, 'Alamat KTP/KK minimal 3 karakter'),
     alamat_domisili: z.string().min(3, 'Alamat Domisili minimal 3 karakter'),
-    id_kategori: z.string().nullable().optional(),
+    id_kategori: z.string().min(1, ' Kategori harus dipilih'),
     id_sub_kategori: z.string().min(1, ' Sub Kategori harus dipilih'),
+    is_domisili: z.boolean().optional(),
 })
+
+const calculateAge = (date: Date) => {
+    const today = new Date()
+    let age = today.getFullYear() - date.getFullYear()
+    const m = today.getMonth() - date.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < date.getDate())) {
+        age--
+    }
+    return age
+}
 
 export default function FormDataAnak({ initialData }: FormDataAnakProps) {
     const navigate = useNavigate()
@@ -74,6 +87,8 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
             alamat_domisili: initialData?.alamat_domisili || '',
             id_kategori: initialData?.id_kategori || '',
             id_sub_kategori: initialData?.id_sub_kategori || '',
+            is_domisili:
+                initialData?.alamat_kk === initialData?.alamat_domisili,
         },
     })
 
@@ -81,9 +96,13 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
     const queryClient = useQueryClient()
 
     const watchKategori = form.watch('id_kategori')
+    const watchTanggalLahir = form.watch('tgl_lahir')
+    const watchAlamatKK = form.watch('alamat_kk')
+
     const { data: kategoriData, isLoading: isLoadingKategori } = useKategori({
         token: user?.token || '',
     })
+
     const { data: subKategoriData, isLoading: isLoadingSubKategori } =
         useSubKategori({
             token: user?.token || '',
@@ -118,20 +137,26 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
             )
 
             // Execute mutation
-            mutation.mutate(formData, {
-                onSuccess: () => {
-                    toast.success('Data berhasil disimpan')
-                    // Invalidate queries to refresh data
-                    queryClient.invalidateQueries({ queryKey: ['anakList'] })
-                    queryClient.invalidateQueries({
-                        queryKey: ['anak-data', values.nik],
-                    })
-                    navigate(`/dashboard/anak/${values.nik}/data-wali`)
-                },
-                onError: (error) => {
-                    toast.error(error.message)
-                },
-            })
+            if (calculateAge(values.tgl_lahir) < 18) {
+                mutation.mutate(formData, {
+                    onSuccess: () => {
+                        toast.success('Data berhasil disimpan')
+                        // Invalidate queries to refresh data
+                        queryClient.invalidateQueries({
+                            queryKey: ['anakList'],
+                        })
+                        queryClient.invalidateQueries({
+                            queryKey: ['anak-data', values.nik],
+                        })
+                        navigate(`/dashboard/anak/${values.nik}/data-wali`)
+                    },
+                    onError: (error) => {
+                        toast.error(error.message)
+                    },
+                })
+            } else {
+                toast.error('Anak harus berusia di bawah 18 tahun')
+            }
         } catch (error) {
             console.error('Form submission error', error)
             toast.error('Gagal menyimpan data. Silakan coba lagi.')
@@ -163,7 +188,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="nama_anak"
@@ -183,7 +207,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="nisn"
@@ -203,7 +226,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="tempat_lahir"
@@ -223,24 +245,39 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
+                <div className="flex gap-2 items-end">
+                    <FormField
+                        control={form.control}
+                        name="tgl_lahir"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Tanggal Lahir</FormLabel>
+                                <DatetimePicker
+                                    {...field}
+                                    value={field.value || new Date()}
+                                    format={[['months', 'days', 'years']]}
+                                />
 
-                <FormField
-                    control={form.control}
-                    name="tgl_lahir"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Tanggal Lahir</FormLabel>
-                            <DatetimePicker
-                                {...field}
-                                value={field.value || new Date()}
-                                format={[['months', 'days', 'years']]}
-                            />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                            <FormMessage />
-                        </FormItem>
+                    {watchTanggalLahir && (
+                        <div
+                            className={cn(
+                                'bg-gray-100 border rounded-md p-2.5 px-3 text-sm text-gray-700',
+                                calculateAge(watchTanggalLahir) < 18
+                                    ? 'text-green-500'
+                                    : 'text-red-500',
+                                calculateAge(watchTanggalLahir) == 0 &&
+                                    'text-gray-700'
+                            )}
+                        >
+                            Umur: {calculateAge(watchTanggalLahir)} tahun
+                        </div>
                     )}
-                />
-
+                </div>
                 <FormField
                     control={form.control}
                     name="jenis_kelamin"
@@ -270,7 +307,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="alamat_kk"
@@ -283,6 +319,15 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                                     className="resize-none"
                                     {...field}
                                     value={field.value || ''}
+                                    onChange={(e) => {
+                                        field.onChange(e)
+                                        if (form.watch('is_domisili')) {
+                                            form.setValue(
+                                                'alamat_domisili',
+                                                e.target.value
+                                            )
+                                        }
+                                    }}
                                 />
                             </FormControl>
 
@@ -290,7 +335,33 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
+                <div className="flex items-center space-x-2">
+                    <FormField
+                        control={form.control}
+                        name="is_domisili"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(checked) => {
+                                            field.onChange(checked)
+                                            if (checked) {
+                                                form.setValue(
+                                                    'alamat_domisili',
+                                                    watchAlamatKK || ''
+                                                )
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                    Alamat Domisili sama dengan Alamat KTP/KK
+                                </FormLabel>
+                            </FormItem>
+                        )}
+                    />
+                </div>
                 <FormField
                     control={form.control}
                     name="alamat_domisili"
@@ -303,6 +374,9 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                                     className="resize-none"
                                     {...field}
                                     value={field.value || ''}
+                                    disabled={
+                                        form.watch('is_domisili') === true
+                                    }
                                 />
                             </FormControl>
 
@@ -310,7 +384,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="id_kategori"
@@ -343,7 +416,6 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="id_sub_kategori"
@@ -353,7 +425,9 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                             <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value.toString() || ''}
-                                disabled={isLoadingSubKategori}
+                                disabled={
+                                    isLoadingSubKategori || !watchKategori
+                                }
                             >
                                 <FormControl>
                                     <SelectTrigger className="w-full">
@@ -378,8 +452,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         </FormItem>
                     )}
                 />
-                <div className="flex justify-end">
-                    <Button type="submit">Simpan Data</Button>
+                <div className="flex justify-center md:justify-end">
+                    <Button type="submit" className="w-full md:w-fit">
+                        Simpan Data
+                    </Button>
                 </div>
             </form>
         </Form>

@@ -176,11 +176,8 @@ export default function FormDataSekolah({
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="PAUD">
-                                        PAUD / Sederajat
-                                    </SelectItem>
                                     <SelectItem value="TK">
-                                        TK / Sederajat
+                                        TK / Sederajat (5-6 Tahun)
                                     </SelectItem>
                                     <SelectItem value="SD">
                                         SD / Sederajat
@@ -325,8 +322,10 @@ export default function FormDataSekolah({
                         )}
                     />
                 ) : null}
-                <div className="flex justify-end">
-                    <Button type="submit">Simpan Data</Button>
+                <div className="flex justify-center md:justify-end">
+                    <Button type="submit" className="w-full md:w-fit">
+                        Simpan Data
+                    </Button>
                 </div>
             </form>
         </Form>

@@ -187,8 +187,10 @@ export default function FormDataTindakLanjut({
                     )}
                 />
 
-                <div className="flex justify-end">
-                    <Button type="submit">Simpan Data</Button>
+                <div className="flex justify-center md:justify-end">
+                    <Button type="submit" className="w-full md:w-fit">
+                        Simpan Data
+                    </Button>
                 </div>
             </form>
         </Form>
