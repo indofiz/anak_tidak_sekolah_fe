@@ -5,7 +5,11 @@ import { ChevronDown, Eye, Pencil, Trash2, User2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
 
-const CardAnak = ({ anak }: { anak: Anak }) => {
+interface CardAnakProps {
+    anak: Anak
+    onDelete: (nik: string) => void
+}
+const CardAnak = ({ anak, onDelete }: CardAnakProps) => {
     const [open, setOpen] = useState(false)
 
     return (
@@ -71,12 +75,15 @@ const CardAnak = ({ anak }: { anak: Anak }) => {
                                 {anak.kelas || '-'}
                             </span>
                         </div>
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2 pt-2 mt-2 border-t border-gray-200">
                             <Button
                                 variant="outline"
                                 className="font-medium flex-1"
+                                asChild
                             >
-                                <Eye size={16} /> Detail
+                                <Link to={`/dashboard/anak/${anak.nik}`}>
+                                    <Eye size={16} /> Detail
+                                </Link>
                             </Button>
                             <Button
                                 variant="outline"
@@ -94,6 +101,10 @@ const CardAnak = ({ anak }: { anak: Anak }) => {
                                 variant="outline"
                                 className="font-medium bg-red-100 text-red-500 border-red-200"
                                 size={'icon'}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onDelete(anak.nik)
+                                }}
                             >
                                 <Trash2 size={16} />
                             </Button>

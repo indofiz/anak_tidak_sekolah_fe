@@ -11,13 +11,14 @@ import Homepage from './pages/homepage'
 import LayoutFormAnak from './features/dashboard/edit-anak/layout'
 import CardForm from './features/dashboard/edit-anak/card'
 import Dashboard from './features/dashboard/beranda'
-import { TableAnakFull } from './features/dashboard/list-anak/table-anak-full'
+import { TableAnakFull } from './features/dashboard/list-anak/show-anak'
 import { ProtectedRoute } from './pages/protected-route'
 import ContainerDataAnak from './features/dashboard/edit-anak/container-form/form-anak'
 import ContainerDataWali from './features/dashboard/edit-anak/container-form/form-wali'
 import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
 import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
 import NotFoundPage from './pages/404'
+import ChildrenDetailPage from './features/dashboard/detail'
 
 const router = createBrowserRouter([
     {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
                     {
                         path: 'anak',
                         element: <TableAnakFull />,
+                    },
+                    {
+                        path: 'anak/:nik',
+                        element: <ChildrenDetailPage />,
                     },
                     {
                         path: 'anak/:id',

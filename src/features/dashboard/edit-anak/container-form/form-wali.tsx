@@ -1,25 +1,8 @@
-import {
-    WaliDetailParams,
-    WaliError,
-    WaliResponse,
-    fetchWaliData,
-} from '@/api/data-wali'
 import { useAuthStore } from '@/store/login-store'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataWali from '../../form/form-data-wali'
-
-const useWaliData = (params: WaliDetailParams) => {
-    return useQuery<WaliResponse, WaliError>({
-        queryKey: ['wali-data', params.nik],
-        queryFn: () => {
-            if (!params.token) throw new Error('Token tidak tersedia')
-            return fetchWaliData(params)
-        },
-        enabled: !!params.nik,
-        retry: false,
-    })
-}
+import { useWaliData } from './query'
+import Loading from '@/components/other/loading'
 
 const ContainerDataWali = () => {
     const { id } = useParams()
@@ -31,7 +14,11 @@ const ContainerDataWali = () => {
     })
 
     if (isLoading) {
-        return <div className="text-center">Loading...</div>
+        return (
+            <div className="max-w-md text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
     }
 
     return (

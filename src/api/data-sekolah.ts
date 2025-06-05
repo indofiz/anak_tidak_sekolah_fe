@@ -49,6 +49,11 @@ export const fetchSekolahData = async (
 
     const data = await response.json()
 
+    if (response.status === 401) {
+        useAuthStore.getState().clearUser()
+        throw new Error('Unauthorized access, please login again')
+    }
+
     if (response.status === 404) {
         throw {
             status: 404,

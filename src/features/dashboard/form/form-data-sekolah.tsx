@@ -31,6 +31,8 @@ import { useQueryClient } from '@tanstack/react-query'
 interface FormDataSekolahProps {
     initialData?: SekolahData | null
     nik: string
+    kategori?: number
+    isBelumSekolah?: boolean
 }
 
 const formSchema = z.object({
@@ -39,17 +41,15 @@ const formSchema = z.object({
     tingkat: z.string().min(1, 'Tingkat sekolah tidak boleh kosong'),
     kelas: z.string().min(1, 'Kelas tidak boleh kosong'),
     tahun_terakhir: z.string().min(1, 'Tahun tidak boleh kosong'),
-    alasan_tidak_sekolah: z
-        .array(z.string())
-        .refine((value) => value.some((item) => item), {
-            message: 'You have to select at least one item.',
-        }),
+    alasan_tidak_sekolah: z.array(z.string()),
     lainnya: z.string().optional(),
 })
 
 export default function FormDataSekolah({
     initialData,
     nik,
+    kategori,
+    isBelumSekolah,
 }: FormDataSekolahProps) {
     const navigate = useNavigate()
     const { user } = useAuthStore()
@@ -233,76 +233,81 @@ export default function FormDataSekolah({
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="alasan_tidak_sekolah"
-                    render={() => (
-                        <FormItem>
-                            <div className="mb-4">
-                                <FormLabel className="text-base">
-                                    Alasan Tidak Sekolah
-                                </FormLabel>
-                                <FormDescription>
-                                    Apa saja sih alasan anak yang didata tidak
-                                    sekolah
-                                </FormDescription>
-                            </div>
-                            {alasanData?.data.map((item) => {
-                                const itemId = item.id.toString()
-                                return (
-                                    <FormField
-                                        key={itemId}
-                                        control={form.control}
-                                        name="alasan_tidak_sekolah"
-                                        render={({ field }) => {
-                                            return (
-                                                <FormItem
-                                                    key={itemId}
-                                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                                >
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value?.includes(
-                                                                itemId
-                                                            )}
-                                                            disabled={
-                                                                alasanIsLoading
-                                                            }
-                                                            onCheckedChange={(
-                                                                checked
-                                                            ) => {
-                                                                return checked
-                                                                    ? field.onChange(
-                                                                          [
-                                                                              ...field.value,
-                                                                              itemId,
-                                                                          ]
-                                                                      )
-                                                                    : field.onChange(
-                                                                          field.value?.filter(
-                                                                              (
-                                                                                  value
-                                                                              ) =>
-                                                                                  value !==
-                                                                                  itemId
+                {kategori != 2 ? (
+                    <FormField
+                        control={form.control}
+                        name="alasan_tidak_sekolah"
+                        render={() => (
+                            <FormItem>
+                                <div className="mb-4">
+                                    <FormLabel className="text-base">
+                                        Alasan{' '}
+                                        {isBelumSekolah
+                                            ? 'Belum Sekolah'
+                                            : 'Tidak Sekolah'}
+                                    </FormLabel>
+                                    <FormDescription>
+                                        Apa saja sih alasan anak yang didata
+                                        tidak sekolah
+                                    </FormDescription>
+                                </div>
+                                {alasanData?.data.map((item) => {
+                                    const itemId = item.id.toString()
+                                    return (
+                                        <FormField
+                                            key={itemId}
+                                            control={form.control}
+                                            name="alasan_tidak_sekolah"
+                                            render={({ field }) => {
+                                                return (
+                                                    <FormItem
+                                                        key={itemId}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(
+                                                                    itemId
+                                                                )}
+                                                                disabled={
+                                                                    alasanIsLoading
+                                                                }
+                                                                onCheckedChange={(
+                                                                    checked
+                                                                ) => {
+                                                                    return checked
+                                                                        ? field.onChange(
+                                                                              [
+                                                                                  ...field.value,
+                                                                                  itemId,
+                                                                              ]
                                                                           )
-                                                                      )
-                                                            }}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="text-sm font-normal">
-                                                        {item.alasan}
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )
-                                        }}
-                                    />
-                                )
-                            })}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                                                        : field.onChange(
+                                                                              field.value?.filter(
+                                                                                  (
+                                                                                      value
+                                                                                  ) =>
+                                                                                      value !==
+                                                                                      itemId
+                                                                              )
+                                                                          )
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormLabel className="text-sm font-normal">
+                                                            {item.alasan}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                )
+                                            }}
+                                        />
+                                    )
+                                })}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                ) : null}
 
                 {isLainnyaSelected ? (
                     <FormField

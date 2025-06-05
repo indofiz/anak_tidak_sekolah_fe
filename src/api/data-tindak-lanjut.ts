@@ -72,6 +72,11 @@ export const useSaveTindakLanjutData = () => {
                 body: formData,
             })
 
+            if (response.status === 401) {
+                useAuthStore.getState().clearUser()
+                throw new Error('Unauthorized access, please login again')
+            }
+
             if (!response.ok) {
                 const error = await response.json()
                 throw new Error(error.message || 'Gagal menyimpan data')

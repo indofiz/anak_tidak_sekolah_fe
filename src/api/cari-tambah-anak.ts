@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/store/login-store'
 import { saveAnak } from './url'
 
 export interface AnakData {

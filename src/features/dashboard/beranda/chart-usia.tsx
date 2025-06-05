@@ -1,5 +1,3 @@
-'use client'
-
 import { TrendingUp } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts'
 
@@ -17,11 +15,19 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-const chartData = [
-    { usia: '5-6 Tahun', anak: 186 },
-    { usia: '7-18 Tahun', anak: 305 },
-    { usia: '≥ 18 Tahun', anak: 237 },
-]
+import {
+    AnakTidakSekolahResponse,
+    fetchDataDashboard,
+} from '@/api/dashboard-all'
+import { useQuery } from '@tanstack/react-query'
+import { useAuthStore } from '@/store/login-store'
+import Loading from '@/components/other/loading'
+
+// Define type for chart data
+type ChartDataItem = {
+    usia: string
+    anak: number
+}
 
 const chartConfig = {
     anak: {
@@ -30,7 +36,64 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
+// Map API labels to chart labels
+const mapApiLabelToChartLabel = (apiLabel: string): string => {
+    if (apiLabel.includes('Usia 5 <= 6')) return '5-6 Tahun'
+    if (apiLabel.includes('Usia 7 <= 17')) return '7-18 Tahun'
+    if (apiLabel.includes('Usia >=18')) return '≥ 18 Tahun'
+    return apiLabel
+}
+
 export function ChartUsia() {
+    const { user } = useAuthStore()
+
+    const { data, isFetching, isLoading, isError } = useQuery<
+        AnakTidakSekolahResponse,
+        Error
+    >({
+        queryKey: ['data-anak-kelurahan'],
+        queryFn: () => {
+            if (!user?.token) {
+                throw new Error('Token tidak tersedia')
+            }
+            return fetchDataDashboard({
+                token: user?.token || '',
+            })
+        },
+        retry: false,
+    })
+
+    // Transform API data to chart format
+    const chartData: ChartDataItem[] = data?.data.total_usia
+        ? data.data.total_usia.map((item) => ({
+              usia: mapApiLabelToChartLabel(item.label),
+              anak: parseInt(item.total, 10) || 0,
+          }))
+        : []
+
+    // Handle loading and empty states
+    if (isLoading || isFetching) {
+        return (
+            <div className="w-full border rounded-lg text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
+    }
+
+    if (isError) {
+        return (
+            <div className="text-center p-8 text-red-500">
+                Gagal memuat data
+            </div>
+        )
+    }
+
+    if (chartData.length === 0) {
+        return (
+            <div className="text-center p-8">Tidak ada data yang tersedia</div>
+        )
+    }
+
     return (
         <Card className="w-full shadow-none">
             <CardHeader>
@@ -44,9 +107,7 @@ export function ChartUsia() {
                     <BarChart
                         accessibilityLayer
                         data={chartData}
-                        margin={{
-                            top: 20,
-                        }}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -54,18 +115,24 @@ export function ChartUsia() {
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
                         />
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="anak" fill="var(--color-anak)" radius={8}>
+                        <Bar
+                            dataKey="anak"
+                            fill="var(--blue-primary)"
+                            radius={[8, 8, 0, 0]}
+                        >
                             <LabelList
                                 position="top"
                                 offset={12}
                                 className="fill-foreground"
                                 fontSize={12}
+                                formatter={(value: number) =>
+                                    value > 0 ? value : ''
+                                }
                             />
                         </Bar>
                     </BarChart>

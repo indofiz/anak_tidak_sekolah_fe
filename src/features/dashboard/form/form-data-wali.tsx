@@ -30,6 +30,8 @@ import { Check, ChevronsUpDown } from 'lucide-react'
 import { useSaveWaliData, WaliData } from '@/api/data-wali'
 import { useNavigate } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
+import { usePekerjaan } from '@/api/master-data/pekerjaan'
+import { useAuthStore } from '@/store/login-store'
 
 interface FormDataWaliProps {
     initialData?: WaliData | null
@@ -44,24 +46,11 @@ const formSchema = z.object({
 
 export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
     const navigate = useNavigate()
+    const { user } = useAuthStore()
 
-    const pekerjaan = [
-        { label: 'Dokter', value: 'dokter' },
-        { label: 'Guru', value: 'guru' },
-        { label: 'Petani', value: 'petani' },
-        { label: 'Nelayan', value: 'nelayan' },
-        { label: 'Programmer', value: 'programmer' },
-        { label: 'Desainer', value: 'desainer' },
-        { label: 'Pengusaha', value: 'pengusaha' },
-        { label: 'Karyawan Swasta', value: 'karyawan_swasta' },
-        { label: 'Pegawai Negeri', value: 'pegawai_negeri' },
-        { label: 'Mahasiswa', value: 'mahasiswa' },
-        { label: 'Pelajar', value: 'pelajar' },
-        { label: 'Ibu Rumah Tangga', value: 'ibu_rumah_tangga' },
-        { label: 'Wiraswasta', value: 'wiraswasta' },
-        { label: 'Buruh', value: 'buruh' },
-        { label: 'Pengangguran', value: 'pengangguran' },
-    ] as const
+    const { data, isLoading } = usePekerjaan({
+        token: user?.token || '',
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -165,13 +154,14 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                                                 !field.value &&
                                                     'text-muted-foreground'
                                             )}
+                                            disabled={isLoading}
                                         >
                                             {field.value
-                                                ? pekerjaan.find(
+                                                ? data?.data.find(
                                                       (kerja) =>
-                                                          kerja.value ===
+                                                          kerja.id.toString() ===
                                                           field.value
-                                                  )?.label
+                                                  )?.pekerjaan
                                                 : 'Pilih Pekerjaan'}
                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
@@ -185,27 +175,27 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                                                 Pekerjaan Tidak Ditemukan.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {pekerjaan.map((kerja) => (
+                                                {data?.data?.map((kerja) => (
                                                     <CommandItem
-                                                        value={kerja.label}
-                                                        key={kerja.value}
+                                                        value={kerja.id.toString()}
+                                                        key={kerja.id}
                                                         onSelect={() => {
                                                             form.setValue(
                                                                 'pekerjaan',
-                                                                kerja.value
+                                                                kerja.id.toString()
                                                             )
                                                         }}
                                                     >
                                                         <Check
                                                             className={cn(
                                                                 'mr-2 h-4 w-4',
-                                                                kerja.value ===
+                                                                kerja.id.toString() ===
                                                                     field.value
                                                                     ? 'opacity-100'
                                                                     : 'opacity-0'
                                                             )}
                                                         />
-                                                        {kerja.label}
+                                                        {kerja.pekerjaan}
                                                     </CommandItem>
                                                 ))}
                                             </CommandGroup>

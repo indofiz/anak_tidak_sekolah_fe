@@ -7,28 +7,20 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { Eye, Pencil, Trash2 } from 'lucide-react'
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+
 import { statusAnak, statusClassName } from '@/lib/status'
 import { cn } from '@/lib/utils'
 import { Link } from 'react-router'
 import { Anak, useDeleteAnak } from '@/api/list-anak'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useDeleteDialogStore } from '@/store/dialog-delete'
 
 const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
     const deleteMutation = useDeleteAnak()
+    const { openDialog } = useDeleteDialogStore()
 
-    const handleDelete = (nik: string) => {
+    const handleDelete = async (nik: string) => {
         deleteMutation.mutate(nik, {
             onSuccess: () => {
                 toast.success('Anak berhasil dihapus')
@@ -39,6 +31,13 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
                 console.error('Error deleting anak:', error)
             },
         })
+    }
+    const openDeleteDialog = (nik: string) => {
+        openDialog(
+            () => handleDelete(nik),
+            'Yakin ingin menghapus data anak?',
+            'data yang dihapus tidak bisa dikembalikan, harus ditambahkan ulang.'
+        )
     }
     return (
         <Table>
@@ -86,8 +85,10 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
                             </span>
                         </TableCell>
                         <TableCell className="text-right space-x-1">
-                            <Button variant="outline" size={'icon'}>
-                                <Eye size={16} />
+                            <Button variant="outline" size={'icon'} asChild>
+                                <Link to={`/dashboard/anak/${anak.nik}`}>
+                                    <Eye size={16} />
+                                </Link>
                             </Button>
                             <Button
                                 variant="outline"
@@ -101,44 +102,14 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
                                     Edit
                                 </Link>
                             </Button>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="bg-red-100 text-red-500 border-red-200"
-                                        size={'icon'}
-                                    >
-                                        <Trash2 size={16} />
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            Apakah anda yakin ingin menghapus?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Setelah dihapus, data tidak bisa
-                                            dikembalikan, harus di tambah ulang.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>
-                                            Batal
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction asChild>
-                                            <Button
-                                                variant={'destructive'}
-                                                className="bg-red-500 text-white"
-                                                onClick={() =>
-                                                    handleDelete(anak.nik)
-                                                }
-                                            >
-                                                Ya, Hapus
-                                            </Button>
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                            <Button
+                                variant="outline"
+                                className="bg-red-100 text-red-500 border-red-200"
+                                size={'icon'}
+                                onClick={() => openDeleteDialog(anak.nik)}
+                            >
+                                <Trash2 size={16} />
+                            </Button>
                         </TableCell>
                     </TableRow>
                 ))}

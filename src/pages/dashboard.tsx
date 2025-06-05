@@ -5,6 +5,8 @@ import { useAuthStore } from '@/store/login-store'
 import { useEffect } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { LogOut, Menu, X } from 'lucide-react'
+import DialogDelete from '@/features/dashboard/list-anak/dialog-delete'
+import Loading from '@/components/other/loading'
 
 const DashboardPage = () => {
     const location = useLocation()
@@ -35,13 +37,16 @@ const DashboardPage = () => {
     if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                Loading...
+                <div className="text-center p-8">
+                    <Loading text="Memuat Data ..." size="sm" color="gray" />
+                </div>
             </div>
         )
     }
 
     return (
         <section className="bg-gray-100 min-h-screen">
+            <DialogDelete />
             {/* Mobile Sidebar */}
             {isSidebarOpen && (
                 <div
@@ -143,7 +148,7 @@ const DashboardPage = () => {
             </div>
 
             {/* Main Content Area */}
-            <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 lg:-mt-32 xl:-mt-48">
+            <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 lg:-mt-48 xl:-mt-56">
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex flex-wrap gap-3 bg-black/10 pb-16 -mb-12 pt-3 px-6 rounded-3xl">
                     <LinkNavbar

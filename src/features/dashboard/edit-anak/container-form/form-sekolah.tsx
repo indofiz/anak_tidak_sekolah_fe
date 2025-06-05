@@ -1,42 +1,39 @@
-import {
-    SekolahDetailParams,
-    SekolahError,
-    SekolahResponse,
-    fetchSekolahData,
-} from '@/api/data-sekolah'
 import { useAuthStore } from '@/store/login-store'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataSekolah from '../../form/form-data-sekolah'
-
-const useSekolahData = (params: SekolahDetailParams) => {
-    return useQuery<SekolahResponse, SekolahError>({
-        queryKey: ['sekolah-data', params.nik],
-        queryFn: () => {
-            if (!params.token) throw new Error('Token tidak tersedia')
-            return fetchSekolahData(params)
-        },
-        enabled: !!params.nik,
-        retry: false,
-    })
-}
+import { useAnakData, useSekolahData } from './query'
+import Loading from '@/components/other/loading'
 
 const ContainerDataSekolah = () => {
     const { id } = useParams()
     const { user } = useAuthStore()
+
+    const { data: anak, isLoading: anakLoading } = useAnakData({
+        nik: id || '',
+        token: user?.token || '',
+    })
 
     const { data, isLoading } = useSekolahData({
         nik: id || '',
         token: user?.token || '',
     })
 
-    if (isLoading) {
-        return <div className="text-center">Loading...</div>
+    if (isLoading || anakLoading) {
+        return (
+            <div className="max-w-md text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
     }
 
     return (
         <div>
-            <FormDataSekolah nik={id || ''} initialData={data?.data} />
+            <FormDataSekolah
+                nik={id || ''}
+                initialData={data?.data}
+                kategori={Number(anak?.data.id_kategori) || 0}
+                isBelumSekolah={Number(anak?.data?.id_sub_kategori) === 1}
+            />
         </div>
     )
 }

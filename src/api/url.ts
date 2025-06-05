@@ -26,6 +26,8 @@ export const updateWali = baseUrl + 'wali/update'
 export const detailTindakLanjut = baseUrl + 'tindak-lanjut/detail'
 export const updateTindakLanjut = baseUrl + 'tindak-lanjut/update'
 
+export const exportExcel = baseUrl + 'anak/export'
+
 // MASTER DATA
 export const listKategori = baseUrl + 'kategori/list'
 export const listSubKategori = baseUrl + 'sub-kategori/list'
@@ -35,3 +37,4 @@ export const listAlasan = baseUrl + 'alasan/list'
 // DASHBOARD
 export const totalKecamatan = baseUrl + 'dashboard/total-kecamatan'
 export const totalKelurahan = baseUrl + 'dashboard/total-kelurahan'
+export const dashboardAll = baseUrl + 'dashboard/list'

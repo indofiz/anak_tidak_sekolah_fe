@@ -32,6 +32,7 @@ import { useSubKategori } from '@/api/master-data/sub-kategori'
 import { useQueryClient } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useEffect } from 'react'
 
 interface FormDataAnakProps {
     initialData?: AnakData | null
@@ -98,6 +99,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
     const watchKategori = form.watch('id_kategori')
     const watchTanggalLahir = form.watch('tgl_lahir')
     const watchAlamatKK = form.watch('alamat_kk')
+
+    useEffect(() => {
+        form.setValue('id_sub_kategori', '')
+    }, [form, watchKategori])
 
     const { data: kategoriData, isLoading: isLoadingKategori } = useKategori({
         token: user?.token || '',
@@ -391,7 +396,11 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         <FormItem>
                             <FormLabel>Kategori Pendataan</FormLabel>
                             <Select
-                                onValueChange={field.onChange}
+                                onValueChange={(selected) => {
+                                    field.onChange(selected)
+                                    if (selected !== field.value)
+                                        form.setValue('id_sub_kategori', '')
+                                }}
                                 defaultValue={field.value?.toString() || ''}
                                 disabled={isLoadingKategori}
                             >

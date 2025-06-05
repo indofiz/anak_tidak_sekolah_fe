@@ -44,7 +44,6 @@ export const fetchWaliData = async (
     )
 
     const data = await response.json()
-    console.log(data)
 
     if (response.status === 404) {
         throw {
@@ -72,6 +71,11 @@ export const useSaveWaliData = () => {
                 },
                 body: formData,
             })
+
+            if (response.status === 401) {
+                useAuthStore.getState().clearUser()
+                throw new Error('Unauthorized access, please login again')
+            }
 
             if (!response.ok) {
                 const error = await response.json()

@@ -1,37 +1,24 @@
-import {
-    AnakDetailParams,
-    ErrorResponse,
-    fetchAnakData,
-    SuccessResponse,
-} from '@/api/data-anak'
 import { useAuthStore } from '@/store/login-store'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import FormDataAnak from '../../form/form-data-anak'
-
-const useAnakData = (params: AnakDetailParams) => {
-    return useQuery<SuccessResponse, ErrorResponse>({
-        queryKey: ['anak-data', params.nik],
-        queryFn: () => {
-            if (!params.token) throw new Error('Token tidak tersedia')
-            return fetchAnakData(params)
-        },
-        enabled: !!params.nik,
-        retry: false,
-    })
-}
+import { useAnakData } from './query'
+import Loading from '@/components/other/loading'
 
 const ContainerDataAnak = () => {
     const { id } = useParams()
     const { user } = useAuthStore()
 
-    const { data, isLoading } = useAnakData({
+    const { data, isLoading, isFetching } = useAnakData({
         nik: id || '',
         token: user?.token || '',
     })
 
-    if (isLoading) {
-        return <div className="text-center">Loading...</div>
+    if (isLoading || isFetching) {
+        return (
+            <div className="max-w-md text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
     }
 
     return (

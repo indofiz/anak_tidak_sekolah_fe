@@ -49,20 +49,41 @@ export interface AnakListError {
     message: string
 }
 
-export interface ParamsAnakList {
-    token?: string
+interface FilterState {
+    page: number
+    per_page: number
+    parameter: string
+    is_old: 0 | 1
+    is_all: 0 | 1
 }
-export const fetchAnakList = async (
-    data: ParamsAnakList
-): Promise<AnakListResponse> => {
-    const response = await fetch(listAnak + '?per_page=1000', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Token: data?.token || '',
-        },
-    })
 
+interface AnakListParams {
+    filter: FilterState
+    token: string
+}
+
+export const fetchAnakList = async (
+    data: AnakListParams
+): Promise<AnakListResponse> => {
+    // create response object with the URL and parameters using fetch
+
+    if (!data?.token) {
+        throw new Error('Token tidak tersedia')
+    }
+    const response = await fetch(
+        `${listAnak}?page=${data.filter.page}&per_page=${data.filter.per_page}&parameter=${data.filter.parameter}&is_old=${data.filter.is_old}&is_all=${data.filter.is_all}`,
+        {
+            method: 'GET',
+            headers: {
+                Token: data.token,
+            },
+        }
+    )
+    //add redirect to login page if response is 401 Unauthorized
+    if (response.status === 401) {
+        useAuthStore.getState().clearUser()
+        throw new Error('Unauthorized access, please login again')
+    }
     if (!response.ok) {
         throw new Error('Gagal mengambil data AnakList')
     }
@@ -70,12 +91,12 @@ export const fetchAnakList = async (
     return response.json()
 }
 
-export const useAnakList = (params: ParamsAnakList) => {
+export const useAnakList = (data: AnakListParams) => {
     return useQuery<AnakListResponse, AnakListError>({
-        queryKey: ['list-anak'],
+        queryKey: ['list-anak', { ...data.filter }],
         queryFn: () => {
-            if (!params.token) throw new Error('Token tidak tersedia')
-            return fetchAnakList(params)
+            if (!data.token) throw new Error('Token tidak tersedia')
+            return fetchAnakList(data)
         },
         retry: false,
     })

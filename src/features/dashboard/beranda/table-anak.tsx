@@ -1,4 +1,6 @@
 import { useAnakList } from '@/api/list-anak'
+import Loading from '@/components/other/loading'
+import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
@@ -17,14 +19,31 @@ import {
 import { statusAnak, statusClassName } from '@/lib/status'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/login-store'
+import { Eye } from 'lucide-react'
+import { Link } from 'react-router'
 
 export function TableAnak() {
     const { user } = useAuthStore()
-    const { data: anakData, isLoading } = useAnakList({
+    const {
+        data: anakData,
+        isLoading,
+        isFetching,
+    } = useAnakList({
         token: user?.token || '',
+        filter: {
+            per_page: 5,
+            page: 1,
+            is_all: 0,
+            is_old: 0,
+            parameter: '',
+        },
     })
-    if (isLoading) {
-        return <div className="text-center">Loading...</div>
+    if (isLoading || isFetching) {
+        return (
+            <div className="w-full  text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
     }
     return (
         <Card className="w-full shadow-none">
@@ -44,6 +63,7 @@ export function TableAnak() {
                             <TableHead>Usia</TableHead>
                             <TableHead>Bersedia</TableHead>
                             <TableHead className="text-right">Status</TableHead>
+                            <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody className="font-normal">
@@ -71,6 +91,15 @@ export function TableAnak() {
                                             ? statusAnak[+anak.status]
                                             : null}
                                     </span>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <Button variant={'outline'} asChild>
+                                        <Link
+                                            to={`/dashboard/anak/${anak.nik}`}
+                                        >
+                                            <Eye className="w-4 h-4" /> Detail
+                                        </Link>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
