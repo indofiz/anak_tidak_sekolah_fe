@@ -19,6 +19,7 @@ import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/
 import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
 import NotFoundPage from './pages/404'
 import ChildrenDetailPage from './features/dashboard/detail'
+import ProfilePage from './features/dashboard/profile'
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
                     {
                         path: 'anak',
                         element: <TableAnakFull />,
+                    },
+                    {
+                        path: 'profil',
+                        element: <ProfilePage />,
                     },
                     {
                         path: 'anak/:nik',
