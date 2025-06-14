@@ -25,7 +25,7 @@ import Loading from '@/components/other/loading'
 
 // Simplified chart configuration
 const chartConfig = {
-    visitors: {
+    anakTS: {
         label: 'Jumlah Anak',
         color: 'var(--blue-primary)',
     },
@@ -57,7 +57,7 @@ export function ChartContent() {
         return data.data.map((item) => ({
             district: kecamatanToSlug(item.kecamatan),
             kecamatan: item.kecamatan,
-            visitors: item.total,
+            anakTS: item.total,
             fill: 'var(--blue-primary)',
         }))
     }, [data])
@@ -65,7 +65,7 @@ export function ChartContent() {
     // Find the maximum value for highlighting
     const maxValue = useMemo(() => {
         if (!chartData.length) return 0
-        return Math.max(...chartData.map((item) => item.visitors))
+        return Math.max(...chartData.map((item) => item.anakTS))
     }, [chartData])
 
     if (isLoading || isFetching) {
@@ -111,8 +111,7 @@ export function ChartContent() {
                         tickMargin={10}
                         axisLine={false}
                         interval={0}
-                        angle={-45}
-                        textAnchor="end"
+                        angle={0}
                         height={60}
                         tickFormatter={(value, index) => {
                             return chartData[index]?.kecamatan || value
@@ -123,7 +122,7 @@ export function ChartContent() {
                         content={<ChartTooltipContent hideLabel />}
                     />
                     <Bar
-                        dataKey="visitors"
+                        dataKey="anakTS"
                         strokeWidth={2}
                         radius={[8, 8, 0, 0]}
                         activeBar={({ ...props }) => (
@@ -137,9 +136,8 @@ export function ChartContent() {
                         )}
                         // Custom bar shape for highlighting max value
                         shape={({ ...props }) => {
-                            const { fill, x, y, width, height, visitors } =
-                                props
-                            const isMax = visitors === maxValue && maxValue > 0
+                            const { fill, x, y, width, height, anakTS } = props
+                            const isMax = anakTS === maxValue && maxValue > 0
 
                             return (
                                 <g>
@@ -169,7 +167,7 @@ export function ChartContent() {
                         }}
                     >
                         <LabelList
-                            dataKey="visitors"
+                            dataKey="anakTS"
                             position="top"
                             className="fill-foreground text-xs"
                             formatter={(value: number) =>

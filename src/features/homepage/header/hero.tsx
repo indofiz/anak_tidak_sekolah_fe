@@ -11,7 +11,7 @@ export default function Header() {
         <header className="relative bg-blue-primary bg-[url('/header.png')] bg-bottom bg-no-repeat bg-contain text-white">
             {/* Floating Navbar */}
             <div className="fixed top-0 md:top-5 left-0 right-0 container mx-auto z-40">
-                <div className="bg-white/90 backdrop-blur-sm text-black md:rounded  z-50">
+                <div className="bg-white/60 border border-white/40 backdrop-blur-lg text-black md:rounded lg:rounded-full z-50">
                     <div className="mx-auto flex justify-between items-center px-4 py-2">
                         {/* Logo */}
                         <div className="font-bold px-4 py-2">ATS</div>
@@ -61,11 +61,11 @@ export default function Header() {
 
             {/* Sidebar Mobile Menu */}
             <div
-                className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg z-40 transform transition-transform duration-300 ease-in-out ${
+                className={`fixed top-0 flex items-center left-0 h-full w-64 bg-white text-black shadow-lg z-40 transform transition-transform duration-300 ease-in-out ${
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 } md:hidden`}
             >
-                <div className="p-4 space-y-4 text-sm font-medium">
+                <div className="p-4 space-y-8 text-sm font-medium">
                     <a href="#beranda" className="block hover:underline">
                         Beranda
                     </a>

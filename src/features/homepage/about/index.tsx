@@ -1,3 +1,4 @@
+import BackgroundVideo from './bg-video'
 import VideoImageAbout from './video-image'
 
 const AboutSection = () => {
