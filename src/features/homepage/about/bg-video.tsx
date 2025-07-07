@@ -7,12 +7,8 @@ const BackgroundVideo = () => {
             muted
             playsInline
             poster="/fallback.jpg"
-            style={{
-                objectFit: 'cover',
-                width: '100%',
-                height: '100%',
-            }}
-        ></video>
+            className="w-full h-full object-cover"
+        />
     )
 }
 

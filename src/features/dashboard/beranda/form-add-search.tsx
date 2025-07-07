@@ -146,13 +146,15 @@ export function FormCariAnak() {
                         {isFetching ? 'Mencari...' : 'Periksa NIK'}
                     </Button>
                     {isError && (
-                        <div className="text-red-600 mt-4 text-sm text-center mt-2">
+                        <div className="text-black text-sm text-center mt-6">
                             <img
-                                src="/person.png"
+                                src="/question.png"
                                 className="w-32 mx-auto"
                                 alt=""
                             />
-                            <p className="mt-2">{error.message}</p>
+                            <div className="mt-2 text-xl font-semibold bg-yellow-100 border border-yellow-primary p-4 rounded-lg">
+                                {error.message}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -160,7 +162,7 @@ export function FormCariAnak() {
                     <div>
                         {error.message == 'Nik tidak ditemukan' && (
                             <Button
-                                className="w-full mt-2"
+                                className="w-full mt-0 bg-yellow-primary border border-yellow-500 py-6 hover:bg-yellow-400"
                                 onClick={() => onSaveNewAnak()}
                                 disabled={mutation.isPending}
                                 variant={'outline'}

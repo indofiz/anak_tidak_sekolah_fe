@@ -6,7 +6,14 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import { Eye, Pencil, Trash2 } from 'lucide-react'
+import {
+    BadgeCheck,
+    Eye,
+    Pencil,
+    School,
+    ShieldUser,
+    Trash2,
+} from 'lucide-react'
 
 import { statusAnak, statusClassName } from '@/lib/status'
 import { cn } from '@/lib/utils'
@@ -15,6 +22,7 @@ import { Anak, useDeleteAnak } from '@/api/list-anak'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useDeleteDialogStore } from '@/store/dialog-delete'
+import StatusProgress from './status-progress'
 
 const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
     const deleteMutation = useDeleteAnak()
@@ -49,6 +57,7 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
                     <TableHead>Usia</TableHead>
                     <TableHead>Bersedia</TableHead>
                     <TableHead className="text-right">Status</TableHead>
+                    <TableHead className="text-right">Progres</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
             </TableHeader>
@@ -83,6 +92,25 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
                                     ? statusAnak[+anak.status]
                                     : 'Tidak Diketahui'}
                             </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                            <div className="flex gap-1 items-center justify-end">
+                                <StatusProgress
+                                    icon={ShieldUser}
+                                    isActive={anak.is_wali === 1}
+                                    tooltip="Data Wali"
+                                />
+                                <StatusProgress
+                                    icon={School}
+                                    isActive={anak.is_sekolah === 1}
+                                    tooltip="Data Sekolah"
+                                />
+                                <StatusProgress
+                                    icon={BadgeCheck}
+                                    isActive={anak.is_tindak === 1}
+                                    tooltip="Data Tindak Lanjut"
+                                />
+                            </div>
                         </TableCell>
                         <TableCell className="text-right space-x-1">
                             <Button variant="outline" size={'icon'} asChild>

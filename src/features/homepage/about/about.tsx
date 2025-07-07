@@ -1,5 +1,6 @@
 import React from 'react'
 import VideoImageAbout from './video-image'
+import { Element } from 'react-scroll'
 
 interface GridItem {
     id: number
@@ -22,42 +23,40 @@ const GridAbout: React.FC = () => {
     ]
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-4 my-12 lg:my-24">
-            <div className="flex flex-col lg:grid grid-cols-12 gap-8 lg:gap-16">
-                {/* Left Section - 5 columns */}
-                <div className="col-span-12 md:col-span-6 bg-gray-100 border border-gray-300 rounded-4xl pt-6 px-6 flex items-center justify-center relative">
-                    <div className="relative z-10">
+        <Element
+            name="tentang"
+            id="tentang"
+            className="w-full max-w-7xl mx-auto px-4 py-12 md:py-16 lg:py-24"
+        >
+            <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-16">
+                {/* Left Section - Video */}
+                <div className="lg:col-span-6 w-full relative min-h-[300px] sm:min-h-[400px] bg-gray-100 border border-gray-300 rounded-3xl p-6 pb-0 flex items-end justify-center">
+                    <div className="relative z-10 w-full">
                         <VideoImageAbout />
                     </div>
-                    <div className="absolute -z-20 inset-0 bg-blue-primary rounded-4xl transform  scale-75 -bottom-22"></div>
-                    <div className="absolute -z-10 inset-0 bg-yellow-primary rounded-4xl transform  scale-95 -bottom-6"></div>
+                    <div className="absolute inset-0 rounded-3xl bg-blue-primary scale-75 sm:scale-90 -z-20" />
+                    <div className="absolute inset-0 rounded-3xl bg-yellow-primary scale-95 -z-10" />
                 </div>
 
-                {/* Right Section - 7 columns */}
-                <div className="col-span-12 md:col-span-6 space-y-6 flex flex-col justify-center items-center">
+                {/* Right Section - Text */}
+                <div className="lg:col-span-6 space-y-6 flex flex-col justify-center">
                     {items.map((item) => (
                         <div
                             key={item.id}
-                            className="flex items-start gap-6 lg:gap-8"
+                            className="flex items-start gap-4 sm:gap-6"
                         >
-                            {/* Icon Container with decorative element */}
                             <div className="relative flex-shrink-0">
-                                {/* Decorative background element with rotation */}
-                                <div className="absolute inset-0 bg-yellow-400 rounded-lg transform rotate-12 scale-110 opacity-30"></div>
-
-                                {/* Main icon container */}
+                                <div className="absolute inset-0 bg-yellow-400 rounded-lg rotate-12 scale-110 opacity-30"></div>
                                 <div className="relative bg-blue-primary p-3 rounded-lg shadow-lg">
                                     <img
                                         src={item.icon}
-                                        className="w-12 h-12"
                                         alt=""
+                                        className="w-10 h-10 sm:w-12 sm:h-12"
                                     />
                                 </div>
                             </div>
-
-                            {/* Text Content */}
-                            <div className="flex-1 pt-1">
-                                <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                            <div className="flex-1">
+                                <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
                                     {item.text}
                                 </p>
                             </div>
@@ -65,7 +64,7 @@ const GridAbout: React.FC = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </Element>
     )
 }
 

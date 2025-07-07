@@ -1,5 +1,6 @@
 import { LoginForm } from '@/components/login-form'
-import { GalleryVerticalEnd } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
+import { Link } from 'react-router'
 
 const LoginPage = () => {
     return (
@@ -9,12 +10,21 @@ const LoginPage = () => {
                     href="#"
                     className="flex items-center gap-2 self-center font-medium"
                 >
-                    <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                        <GalleryVerticalEnd className="size-4" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-yellow-primary text-primary-foreground">
+                        <img src="/logo-dikbud.png" className="size-6" />
                     </div>
                     ATS Login.
                 </a>
                 <LoginForm />
+                <div className="text-center mt-0 text-white">
+                    <Link
+                        to="/"
+                        className="flex items-center justify-center gap-2 text-sm"
+                    >
+                        <ArrowLeft className="size-4" />
+                        Ke halaman utama
+                    </Link>
+                </div>
             </div>
         </div>
     )

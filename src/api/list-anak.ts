@@ -26,6 +26,9 @@ export interface Anak {
     bersedia: string | null
     program: string | null
     catatan: string | null
+    is_sekolah: 0 | 1
+    is_wali: 0 | 1
+    is_tindak: 0 | 1
 }
 
 interface Pagination {

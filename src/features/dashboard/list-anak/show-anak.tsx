@@ -27,6 +27,7 @@ import {
 import { FormCariAnak } from '../beranda/form-add-search'
 import FilterExport from './filter-export'
 import Loading from '@/components/other/loading'
+import TabArsip from './tab-arsip'
 
 export function TableAnakFull() {
     const { user } = useAuthStore()
@@ -58,7 +59,10 @@ export function TableAnakFull() {
                     Semua data anak yang baru ditambahkan oleh PSM
                 </CardDescription>
             </CardHeader>
-            <CardContent className="p-2 md:p-4">
+            <CardContent className="p-2 md:p-4 md:pt-0">
+                <div className="mb-4">
+                    <TabArsip />
+                </div>
                 <div className="flex flex-col md:flex-row w-full gap-2 justify-between mb-4">
                     <SearchForm />
                     <div className="flex gap-2">

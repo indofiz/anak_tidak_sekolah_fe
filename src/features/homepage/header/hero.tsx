@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react' // pastikan lucide-react sudah terinstall
 import { Link } from 'react-router'
 import { useAuthStore } from '@/store/login-store'
+import { Link as LinkScroll, Element } from 'react-scroll'
 
 export default function Header() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -9,6 +10,7 @@ export default function Header() {
 
     return (
         <header className="relative bg-blue-primary bg-[url('/header.png')] bg-bottom bg-no-repeat bg-contain text-white">
+            <Element name="header" id="header" />
             {/* Floating Navbar */}
             <div className="fixed top-0 md:top-5 left-0 right-0 container mx-auto z-40">
                 <div className="bg-white/60 border border-white/40 backdrop-blur-lg text-black md:rounded lg:rounded-full z-50">
@@ -18,19 +20,54 @@ export default function Header() {
 
                         {/* Desktop Menu */}
                         <nav className="hidden md:flex space-x-6 text-sm font-medium">
-                            <a href="#beranda" className="hover:underline">
+                            <LinkScroll
+                                to="header" // sama dengan name="section1"
+                                smooth={true} // animasi halus
+                                duration={500} // durasi scroll dalam ms
+                                offset={-50} // jarak offset (opsional)
+                                className="hover:text-yellow-primary cursor-pointer"
+                                activeClass="text-blue-primary font-bold"
+                                spy={true}
+                            >
                                 Beranda
-                            </a>
-                            <a href="#tentang" className="hover:underline">
+                            </LinkScroll>
+                            <LinkScroll
+                                to="tentang" // sama dengan name="section1"
+                                smooth={true} // animasi halus
+                                duration={500} // durasi scroll dalam ms
+                                offset={-50} // jarak offset (opsional)
+                                className="hover:text-yellow-primary cursor-pointer"
+                                activeClass="text-blue-primary font-bold"
+                                spy={true}
+                            >
                                 Tentang
-                            </a>
-                            <a href="#sebaran" className="hover:underline">
+                            </LinkScroll>
+                            <LinkScroll
+                                to="sebaran" // sama dengan name="section1"
+                                smooth={true} // animasi halus
+                                duration={500} // durasi scroll dalam ms
+                                offset={-50} // jarak offset (opsional)
+                                className="hover:text-yellow-primary cursor-pointer"
+                                activeClass="text-blue-primary font-bold"
+                                spy={true}
+                            >
                                 Persebaran Data
-                            </a>
-                            <a href="#hubungi" className="hover:underline">
+                            </LinkScroll>
+                            <LinkScroll
+                                to="hubungi" // sama dengan name="section1"
+                                smooth={true} // animasi halus
+                                duration={500} // durasi scroll dalam ms
+                                offset={-50} // jarak offset (opsional)
+                                className="hover:text-yellow-primary cursor-pointer"
+                                activeClass="text-blue-primary font-bold"
+                                spy={true}
+                            >
                                 Hubungi Kami
-                            </a>
-                            <a href="#panduan" className="hover:underline">
+                            </LinkScroll>
+                            <a
+                                href="#panduan"
+                                className="hover:text-yellow-primary"
+                            >
                                 Panduan
                             </a>
                         </nav>
@@ -66,24 +103,59 @@ export default function Header() {
                 } md:hidden`}
             >
                 <div className="p-4 space-y-8 text-sm font-medium">
-                    <a href="#beranda" className="block hover:underline">
+                    <LinkScroll
+                        to="header"
+                        smooth={true}
+                        duration={500}
+                        offset={-50}
+                        onClick={() => setSidebarOpen(false)}
+                        href="#beranda"
+                        className="block hover"
+                    >
                         Beranda
-                    </a>
-                    <a href="#tentang" className="block hover:underline">
+                    </LinkScroll>
+                    <LinkScroll
+                        to="tentang"
+                        smooth={true}
+                        duration={500}
+                        offset={-50}
+                        onClick={() => setSidebarOpen(false)}
+                        href="#tentang"
+                        className="block hover"
+                    >
                         Tentang
-                    </a>
-                    <a href="#sebaran" className="block hover:underline">
+                    </LinkScroll>
+                    <LinkScroll
+                        to="sebaran"
+                        smooth={true}
+                        duration={500}
+                        offset={-50}
+                        onClick={() => setSidebarOpen(false)}
+                        href="#sebaran"
+                        className="block hover"
+                    >
                         Persebaran Data
-                    </a>
-                    <a href="#hubungi" className="block hover:underline">
+                    </LinkScroll>
+                    <LinkScroll
+                        to="hubungi"
+                        smooth={true}
+                        duration={500}
+                        offset={-50}
+                        onClick={() => setSidebarOpen(false)}
+                        href="#hubungi"
+                        className="block hover"
+                    >
                         Hubungi Kami
-                    </a>
-                    <a href="#panduan" className="block hover:underline">
+                    </LinkScroll>
+                    <a href="#panduan" className="block hover">
                         Panduan
                     </a>
-                    <button className="w-full bg-black text-white px-4 py-2 rounded-md hover:opacity-90">
-                        LOGIN
-                    </button>
+                    <Link
+                        to={user ? '/dashboard' : '/login'}
+                        className="w-full bg-black text-white px-4 py-2 rounded-md hover:opacity-90"
+                    >
+                        {user ? 'DASHBOARD' : 'LOGIN'}
+                    </Link>
                 </div>
             </div>
 

@@ -25,6 +25,7 @@ import {
 import { format } from 'date-fns'
 import { useAuthStore } from '@/store/login-store'
 import { exportExcel } from '@/api/url'
+import useFilterAnak from '@/store/filter-anak-store'
 
 // Function to convert object to query string
 const objectToQueryString = (obj: Record<string, unknown>) => {
@@ -84,13 +85,14 @@ const formSchema = z
 type FilterExportData = z.infer<typeof formSchema>
 
 const FilterExport: React.FC = () => {
+    const { is_old } = useFilterAnak()
     const form = useForm<FilterExportData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             parameter: '',
             per_page: '100',
             page: '1',
-            is_old: false,
+            is_old: is_old === 1,
         },
     })
 

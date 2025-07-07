@@ -1,9 +1,19 @@
 import { Anak } from '@/api/list-anak'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { ChevronDown, Eye, Pencil, Trash2, User2 } from 'lucide-react'
+import {
+    BadgeCheck,
+    ChevronDown,
+    Eye,
+    Pencil,
+    School,
+    ShieldUser,
+    Trash2,
+    User2,
+} from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
+import StatusProgress from './status-progress'
 
 interface CardAnakProps {
     anak: Anak
@@ -54,6 +64,26 @@ const CardAnak = ({ anak, onDelete }: CardAnakProps) => {
                 <div className="flex justify-between">
                     Wali :{' '}
                     <span className="font-medium">{anak.nama_wali || '-'}</span>
+                </div>
+                <div className="mt-1 flex justify-between">
+                    Progress :{' '}
+                    <div className="flex gap-1 items-center justify-end">
+                        <StatusProgress
+                            icon={ShieldUser}
+                            isActive={anak.is_wali === 1}
+                            tooltip="Data Wali"
+                        />
+                        <StatusProgress
+                            icon={School}
+                            isActive={anak.is_sekolah === 1}
+                            tooltip="Data Sekolah"
+                        />
+                        <StatusProgress
+                            icon={BadgeCheck}
+                            isActive={anak.is_tindak === 1}
+                            tooltip="Data Tindak Lanjut"
+                        />
+                    </div>
                 </div>
                 {open ? (
                     <>

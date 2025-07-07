@@ -19,8 +19,9 @@ import {
 import { statusAnak, statusClassName } from '@/lib/status'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/login-store'
-import { Eye } from 'lucide-react'
+import { BadgeCheck, Eye, School, ShieldUser } from 'lucide-react'
 import { Link } from 'react-router'
+import StatusProgress from '../list-anak/status-progress'
 
 export function TableAnak() {
     const { user } = useAuthStore()
@@ -63,6 +64,9 @@ export function TableAnak() {
                             <TableHead>Usia</TableHead>
                             <TableHead>Bersedia</TableHead>
                             <TableHead className="text-right">Status</TableHead>
+                            <TableHead className="text-right">
+                                Progress
+                            </TableHead>
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -91,6 +95,25 @@ export function TableAnak() {
                                             ? statusAnak[+anak.status]
                                             : null}
                                     </span>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <div className="flex gap-1 items-center justify-end">
+                                        <StatusProgress
+                                            icon={ShieldUser}
+                                            isActive={anak.is_wali === 1}
+                                            tooltip="Data Wali"
+                                        />
+                                        <StatusProgress
+                                            icon={School}
+                                            isActive={anak.is_sekolah === 1}
+                                            tooltip="Data Sekolah"
+                                        />
+                                        <StatusProgress
+                                            icon={BadgeCheck}
+                                            isActive={anak.is_tindak === 1}
+                                            tooltip="Data Tindak Lanjut"
+                                        />
+                                    </div>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Button variant={'outline'} asChild>
