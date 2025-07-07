@@ -1,25 +1,31 @@
+import React, { Suspense } from 'react'
+import { Outlet } from 'react-router'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
 
-import LoginPage from './pages/login'
-import OtpPage from './pages/otp-page'
-import DashboardPage from './pages/dashboard'
-import { Outlet } from 'react-router'
-import Homepage from './pages/homepage'
 import LayoutFormAnak from './features/dashboard/edit-anak/layout'
 import CardForm from './features/dashboard/edit-anak/card'
-import Dashboard from './features/dashboard/beranda'
 import { TableAnakFull } from './features/dashboard/list-anak/show-anak'
 import { ProtectedRoute } from './pages/protected-route'
 import ContainerDataAnak from './features/dashboard/edit-anak/container-form/form-anak'
 import ContainerDataWali from './features/dashboard/edit-anak/container-form/form-wali'
 import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
 import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
-import NotFoundPage from './pages/404'
-import ChildrenDetailPage from './features/dashboard/detail'
-import ProfilePage from './features/dashboard/profile'
+import SpinnerLoader from './loader-suspense'
+
+// LAZY LOAD
+const Homepage = React.lazy(() => import('./pages/homepage'))
+const DashboardPage = React.lazy(() => import('./pages/dashboard'))
+const OtpPage = React.lazy(() => import('./pages/otp-page'))
+const LoginPage = React.lazy(() => import('./pages/login'))
+const Dashboard = React.lazy(() => import('./features/dashboard/beranda'))
+const ProfilePage = React.lazy(() => import('./features/dashboard/profile'))
+const ChildrenDetailPage = React.lazy(
+    () => import('./features/dashboard/detail')
+)
+const NotFoundPage = React.lazy(() => import('./pages/404'))
 
 const router = createBrowserRouter([
     {
@@ -122,7 +128,9 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <Toaster richColors position="top-center" />
-            <RouterProvider router={router} />
+            <Suspense fallback={<SpinnerLoader />}>
+                <RouterProvider router={router} />
+            </Suspense>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     )
