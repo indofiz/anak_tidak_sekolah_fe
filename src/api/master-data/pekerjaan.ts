@@ -46,5 +46,6 @@ export const usePekerjaan = (params: ParamsPekerjaan) => {
             return fetchPekerjaanList(params)
         },
         retry: false,
+        refetchOnWindowFocus: false,
     })
 }

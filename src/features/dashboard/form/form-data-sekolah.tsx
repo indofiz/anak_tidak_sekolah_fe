@@ -127,7 +127,10 @@ export default function FormDataSekolah({
                     name="nama_sekolah"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nama Sekolah</FormLabel>
+                            <FormLabel>
+                                Nama Sekolah :{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : SD N 12 Pangkalpinang"
@@ -146,7 +149,10 @@ export default function FormDataSekolah({
                     name="npsn_sekolah"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>NPSN Sekolah</FormLabel>
+                            <FormLabel>
+                                NPSN Sekolah :{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : 12345678"
@@ -165,7 +171,10 @@ export default function FormDataSekolah({
                     name="tingkat"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tingkat :</FormLabel>
+                            <FormLabel>
+                                Tingkat :{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
@@ -201,7 +210,10 @@ export default function FormDataSekolah({
                     name="kelas"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Kelas :</FormLabel>
+                            <FormLabel>
+                                Kelas :{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : Kelas 12"
@@ -220,7 +232,10 @@ export default function FormDataSekolah({
                     name="tahun_terakhir"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tahun Terakhir</FormLabel>
+                            <FormLabel>
+                                Tahun Terakhir :{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : 2015"
@@ -315,7 +330,12 @@ export default function FormDataSekolah({
                         name="lainnya"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Alasan Lain</FormLabel>
+                                <FormLabel>
+                                    Alasan Lain :{' '}
+                                    <span className="text-gray-500 text-xs">
+                                        (Opsional)
+                                    </span>
+                                </FormLabel>
                                 <FormControl>
                                     <Textarea
                                         placeholder="contoh : Sakit keras, tidak mampu bayar biaya sekolah, dll."

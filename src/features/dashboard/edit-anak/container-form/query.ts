@@ -34,6 +34,7 @@ export const useAnakData = (params: AnakDetailParams) => {
         },
         enabled: !!params.nik,
         retry: false,
+        refetchOnWindowFocus: false,
     })
 }
 
@@ -46,6 +47,7 @@ export const useSekolahData = (params: SekolahDetailParams) => {
         },
         enabled: !!params.nik,
         retry: false,
+        refetchOnWindowFocus: false,
     })
 }
 
@@ -58,6 +60,7 @@ export const useWaliData = (params: WaliDetailParams) => {
         },
         enabled: !!params.nik,
         retry: false,
+        refetchOnWindowFocus: false,
     })
 }
 
@@ -70,5 +73,6 @@ export const useTindakLanjutData = (params: TindakLanjutDetailParams) => {
         },
         enabled: !!params.nik,
         retry: false,
+        refetchOnWindowFocus: false,
     })
 }

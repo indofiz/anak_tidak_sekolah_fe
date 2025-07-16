@@ -14,6 +14,7 @@ import ContainerDataWali from './features/dashboard/edit-anak/container-form/for
 import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
 import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
 import SpinnerLoader from './loader-suspense'
+import PageEditProfile from './features/dashboard/profile/page-edit'
 
 // LAZY LOAD
 const Homepage = React.lazy(() => import('./pages/homepage'))
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
                     {
                         path: 'profil',
                         element: <ProfilePage />,
+                    },
+                    {
+                        path: 'profil/edit',
+                        element: <PageEditProfile />,
                     },
                     {
                         path: 'anak/:nik',

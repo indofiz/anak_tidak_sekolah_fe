@@ -15,7 +15,6 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { DatetimePicker } from '@/components/ui/datetime'
 import {
     Select,
     SelectContent,
@@ -33,6 +32,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect } from 'react'
+import BirthDatePicker from '@/components/ui/datepicker'
 
 interface FormDataAnakProps {
     initialData?: AnakData | null
@@ -179,7 +179,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="nik"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nomor Induk Kependudukan</FormLabel>
+                            <FormLabel>
+                                Nomor Induk Kependudukan:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh: 029392133213"
@@ -198,7 +201,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="nama_anak"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nama Lengkap</FormLabel>
+                            <FormLabel>
+                                Nama Lengkap:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Nama Lengkap Anak"
@@ -217,7 +223,12 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="nisn"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>NISN</FormLabel>
+                            <FormLabel>
+                                NISN :
+                                <span className="text-gray-500 text-xs">
+                                    (Optional)
+                                </span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : 120021323213"
@@ -236,7 +247,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="tempat_lahir"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tempat Lahir</FormLabel>
+                            <FormLabel>
+                                Tempat Lahir:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh: Gabek 1"
@@ -256,11 +270,16 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                         name="tgl_lahir"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Tanggal Lahir</FormLabel>
-                                <DatetimePicker
+                                <FormLabel>
+                                    Tanggal Lahir:{' '}
+                                    <span className="text-red-500 text-xs">
+                                        *
+                                    </span>
+                                </FormLabel>
+                                <BirthDatePicker
                                     {...field}
                                     value={field.value || new Date()}
-                                    format={[['months', 'days', 'years']]}
+                                    onChange={field.onChange}
                                 />
 
                                 <FormMessage />
@@ -288,7 +307,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="jenis_kelamin"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Jenis Kelamin</FormLabel>
+                            <FormLabel>
+                                Jenis Kelamin:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value || ''}
@@ -317,7 +339,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="alamat_kk"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Alamat KTP/KK</FormLabel>
+                            <FormLabel>
+                                Alamat KTP/KK:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Textarea
                                     placeholder="contoh: gabek 1"
@@ -372,7 +397,12 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="alamat_domisili"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Alamat Domisili</FormLabel>
+                            <FormLabel>
+                                Alamat Domisili:{' '}
+                                <span className="text-gray-500 text-xs">
+                                    (Optional)
+                                </span>
+                            </FormLabel>
                             <FormControl>
                                 <Textarea
                                     placeholder="contoh : Gabek 1"
@@ -394,7 +424,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="id_kategori"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Kategori Pendataan</FormLabel>
+                            <FormLabel>
+                                Kategori Pendataan:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <Select
                                 onValueChange={(selected) => {
                                     field.onChange(selected)
@@ -430,7 +463,10 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
                     name="id_sub_kategori"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Sub Kategori Pendataan</FormLabel>
+                            <FormLabel>
+                                Sub Kategori Pendataan:{' '}
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value.toString() || ''}

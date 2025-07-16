@@ -1,3 +1,12 @@
+<IfModule mod_headers.c>
+  # Nonaktifkan cache untuk file penting React
+  <FilesMatch "\.(html|js|css|json|png|jpg|jpeg|svg|webp|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+
 <IfModule mod_rewrite.c>
 
     RewriteEngine On

@@ -28,6 +28,9 @@ export const updateTindakLanjut = baseUrl + 'tindak-lanjut/update'
 
 export const exportExcel = baseUrl + 'anak/export'
 
+export const detailUser = baseUrl + 'operator/detail'
+export const updateUser = baseUrl + 'operator/update'
+
 // MASTER DATA
 export const listKategori = baseUrl + 'kategori/list'
 export const listSubKategori = baseUrl + 'sub-kategori/list'

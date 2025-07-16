@@ -1,102 +1,124 @@
-import { User, MapPin, Phone, Mail } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Phone, Mail, Edit3, UserCircle2, Home, Building2 } from 'lucide-react'
+import { useProfileDetail } from '@/api/profile'
+import { useAuthStore } from '@/store/login-store'
+import Loading from '@/components/other/loading'
+import { Link } from 'react-router'
 
-const ProfileDetailCard = () => {
-    // Sample data based on your API response
-    const profileData = {
-        status: 200,
-        message: 'Data Operator ditemukan',
-        data: {
-            nama_lengkap: 'Juliansyah',
-            jenis_kelamin: 'PRIA',
-            alamat: 'Jalan Adyaksa No. 90',
-            kelurahan: 5,
-            mobile: '083175087363',
-            email: 'indofiz@gmail.com',
-        },
+export default function ProfileDetailCard() {
+    const { user } = useAuthStore()
+    const {
+        data: userProfile,
+        isLoading,
+        isRefetching,
+    } = useProfileDetail({
+        token: user?.token || '',
+    })
+
+    if (isLoading || isRefetching) {
+        return (
+            <div className="max-w-md text-center p-8">
+                <Loading text="Memuat Data ..." size="sm" color="gray" />
+            </div>
+        )
     }
 
-    const { data } = profileData
-
     return (
-        <div className="max-w-md mx-auto">
-            <Card className="overflow-hidden pt-0">
-                {/* Header Section */}
-                <CardHeader className="bg-yellow-primary text-white text-center pb-8 pt-6">
-                    <div className="flex items-center justify-center mb-4">
-                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg">
-                            <User className="w-10 h-10 text-blue-primary" />
+        <div className="w-full max-w-md mx-auto p-4">
+            <Card className="duration-300">
+                <CardHeader className="pb-4">
+                    <div className="flex flex-col items-center text-center space-y-3">
+                        <div className="w-16 h-16 bg-blue-primary rounded-full flex items-center justify-center">
+                            <UserCircle2 className="w-9 h-9 text-white" />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-900">
+                                {userProfile?.data.nama_lengkap}
+                            </h2>
+                            <Badge variant="secondary" className="mt-2">
+                                {userProfile?.data.jenis_kelamin}
+                            </Badge>
                         </div>
                     </div>
-                    <CardTitle className="text-2xl text-black font-bold">
-                        {data.nama_lengkap}
-                    </CardTitle>
-                    <p className="text-black capitalize">
-                        {data.jenis_kelamin.toLowerCase()}
-                    </p>
                 </CardHeader>
 
-                <CardContent className="p-6">
-                    {/* Profile Details */}
-                    <div className="space-y-4 mb-6">
-                        {/* Address */}
+                <CardContent className="space-y-4">
+                    <div className="space-y-3">
                         <div className="flex items-start space-x-3">
-                            <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                                <MapPin className="w-5 h-5 text-gray-600" />
+                            <div className="w-5 h-5 mt-0.5 text-gray-500">
+                                <Home className="w-5 h-5" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900">
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">
                                     Alamat
                                 </p>
-                                <p className="text-sm text-gray-600 break-words">
-                                    {data.alamat}
-                                </p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    Kelurahan: {data.kelurahan}
+                                <p className="text-sm text-gray-600">
+                                    {userProfile?.data.alamat}
                                 </p>
                             </div>
                         </div>
 
-                        {/* Phone */}
-                        <div className="flex items-center space-x-3">
-                            <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                <Phone className="w-5 h-5 text-green-600" />
+                        <div className="flex items-start space-x-3">
+                            <div className="w-5 h-5 mt-0.5 text-gray-500">
+                                <Building2 className="w-5 h-5" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900">
-                                    No. Telepon
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">
+                                    Kelurahan
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                    {data.mobile}
+                                    {userProfile?.data.kelurahan}
                                 </p>
                             </div>
                         </div>
 
-                        {/* Email */}
+                        <Separator />
+
                         <div className="flex items-center space-x-3">
-                            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <Mail className="w-5 h-5 text-blue-600" />
+                            <div className="w-5 h-5 text-gray-500">
+                                <Phone className="w-5 h-5" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900">
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">
+                                    Mobile
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                    {userProfile?.data.mobile}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                            <div className="w-5 h-5 text-gray-500">
+                                <Mail className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">
                                     Email
                                 </p>
                                 <p className="text-sm text-gray-600 break-all">
-                                    {data.email}
+                                    {userProfile?.data.email}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Action Button */}
-                    <div className="flex justify-center">
-                        <Button className="w-full">Edit Profile</Button>
+                    <div className="pt-4">
+                        <Button
+                            className="w-full bg-blue-primary hover:bg-blue-600 text-white"
+                            asChild
+                        >
+                            <Link to="/dashboard/profil/edit">
+                                <Edit3 className="w-4 h-4 mr-2" />
+                                Edit Profile
+                            </Link>
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
         </div>
     )
 }
-
-export default ProfileDetailCard

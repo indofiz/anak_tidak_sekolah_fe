@@ -105,7 +105,10 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                     name="nama_wali"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nama Wali</FormLabel>
+                            <FormLabel>
+                                Nama Wali :
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : Juliansyah"
@@ -124,7 +127,10 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                     name="no_hp"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>No. HP Wali</FormLabel>
+                            <FormLabel>
+                                No. HP Wali :
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh: 083175087XXX"
@@ -142,7 +148,10 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                     name="pekerjaan"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel>Pekerjaan :</FormLabel>
+                            <FormLabel>
+                                Pekerjaan :
+                                <span className="text-red-500 text-xs">*</span>
+                            </FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -168,7 +177,7 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                                     </FormControl>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full p-0">
-                                    <Command>
+                                    <Command shouldFilter={true}>
                                         <CommandInput placeholder="Cari Pekerjaan..." />
                                         <CommandList>
                                             <CommandEmpty>
@@ -177,7 +186,7 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                                             <CommandGroup>
                                                 {data?.data?.map((kerja) => (
                                                     <CommandItem
-                                                        value={kerja.id.toString()}
+                                                        value={kerja.pekerjaan} // Changed to pekerjaan for search
                                                         key={kerja.id}
                                                         onSelect={() => {
                                                             form.setValue(
@@ -203,7 +212,6 @@ export default function FormDataWali({ initialData, nik }: FormDataWaliProps) {
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-
                             <FormMessage />
                         </FormItem>
                     )}

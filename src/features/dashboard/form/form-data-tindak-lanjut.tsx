@@ -92,7 +92,8 @@ export default function FormDataTindakLanjut({
                     render={({ field }) => (
                         <FormItem className="space-y-3">
                             <FormLabel>
-                                Bersedia mengikuti pendidikan nonformal
+                                Bersedia mengikuti pendidikan nonformal:{' '}
+                                <span className="text-red-500 text-xs">*</span>
                             </FormLabel>
                             <FormControl>
                                 <RadioGroup
