@@ -29,7 +29,7 @@ import FilterExport from './filter-export'
 import Loading from '@/components/other/loading'
 import TabArsip from './tab-arsip'
 
-export function TableAnakFull() {
+export default function TableAnakFull() {
     const { user } = useAuthStore()
     const { page, per_page, is_all, is_old, parameter } = useFilterAnak()
     const {
@@ -77,11 +77,11 @@ export function TableAnakFull() {
                                 <DialogHeader>
                                     <DialogTitle className="flex items-center gap-2">
                                         <Filter className="w-6 h-6 text-blue-600" />
-                                        Export Filters
+                                        Export Excel Anak
                                     </DialogTitle>
                                     <DialogDescription className="text-left">
-                                        Masukan filter sesuai dengan data yang
-                                        ingin anda download.
+                                        Centang 18 jika ingin menampilkan hanya
+                                        anak yang berumur diatas 18+
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="w-full">

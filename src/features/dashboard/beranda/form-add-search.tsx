@@ -152,8 +152,8 @@ export function FormCariAnak() {
                                 className="w-32 mx-auto"
                                 alt=""
                             />
-                            <div className="mt-2 text-xl font-semibold bg-yellow-100 border border-yellow-primary p-4 rounded-lg">
-                                {error.message}
+                            <div className="mt-2 text-md font-semibold bg-yellow-100 border border-yellow-primary p-4 rounded-lg">
+                                Ups: {error.message}
                             </div>
                         </div>
                     )}

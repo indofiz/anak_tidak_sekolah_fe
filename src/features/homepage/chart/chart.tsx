@@ -40,7 +40,7 @@ const kecamatanToSlug = (name: string): string => {
         .replace(/[\u0300-\u036f]/g, '')
 }
 
-export function ChartContent() {
+export default function ChartContent() {
     const { data, isFetching, isLoading, isError } = useQuery<
         AnakTidakSekolahKecamatanResponse,
         Error

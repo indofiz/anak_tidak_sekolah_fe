@@ -10,6 +10,7 @@ import {
     BadgeCheck,
     Eye,
     Pencil,
+    PlusCircle,
     School,
     ShieldUser,
     Trash2,
@@ -23,6 +24,16 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useDeleteDialogStore } from '@/store/dialog-delete'
 import StatusProgress from './status-progress'
+import NoData from '@/components/other/no-data'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import { FormCariAnak } from '../beranda/form-add-search'
 
 const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
     const deleteMutation = useDeleteAnak()
@@ -47,6 +58,39 @@ const TableAnakList = ({ dataAnak }: { dataAnak: Anak[] }) => {
             'data yang dihapus tidak bisa dikembalikan, harus ditambahkan ulang.'
         )
     }
+
+    if (dataAnak.length === 0) {
+        return (
+            <NoData
+                title="Belum ada data anak"
+                description="Tambahkan data anak terlebih dahulu"
+                button={
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant={'default'}>
+                                <PlusCircle className="size-4" />
+                                Tambah Anak
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Tambah Anak</DialogTitle>
+                                <DialogDescription>
+                                    Masukan Nama dan NIK anak, guna melihat
+                                    apakah anak sudah pernah didata.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="w-full">
+                                <FormCariAnak />
+                            </div>
+                            <div></div>
+                        </DialogContent>
+                    </Dialog>
+                }
+            />
+        )
+    }
+
     return (
         <Table>
             <TableHeader className="bg-gray-50">

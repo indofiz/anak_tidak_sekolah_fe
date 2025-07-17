@@ -7,14 +7,8 @@ import { Toaster } from 'sonner'
 
 import LayoutFormAnak from './features/dashboard/edit-anak/layout'
 import CardForm from './features/dashboard/edit-anak/card'
-import { TableAnakFull } from './features/dashboard/list-anak/show-anak'
 import { ProtectedRoute } from './pages/protected-route'
-import ContainerDataAnak from './features/dashboard/edit-anak/container-form/form-anak'
-import ContainerDataWali from './features/dashboard/edit-anak/container-form/form-wali'
-import ContainerDataSekolah from './features/dashboard/edit-anak/container-form/form-sekolah'
-import ContainerDataTidakLanjut from './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
-import SpinnerLoader from './loader-suspense'
-import PageEditProfile from './features/dashboard/profile/page-edit'
+import SpinnerLoader, { SuspenseLoaderSection } from './loader-suspense'
 
 // LAZY LOAD
 const Homepage = React.lazy(() => import('./pages/homepage'))
@@ -26,7 +20,34 @@ const ProfilePage = React.lazy(() => import('./features/dashboard/profile'))
 const ChildrenDetailPage = React.lazy(
     () => import('./features/dashboard/detail')
 )
+const PageEditProfile = React.lazy(
+    () => import('./features/dashboard/profile/page-edit')
+)
+
+// 404
 const NotFoundPage = React.lazy(() => import('./pages/404'))
+
+//TABLE
+const TableAnakFull = React.lazy(
+    () => import('./features/dashboard/list-anak/show-anak')
+)
+
+//CONTAINER FORM
+const ContainerDataAnak = React.lazy(
+    () => import('./features/dashboard/edit-anak/container-form/form-anak')
+)
+const ContainerDataWali = React.lazy(
+    () => import('./features/dashboard/edit-anak/container-form/form-wali')
+)
+const ContainerDataSekolah = React.lazy(
+    () => import('./features/dashboard/edit-anak/container-form/form-sekolah')
+)
+const ContainerDataTidakLanjut = React.lazy(
+    () =>
+        import(
+            './features/dashboard/edit-anak/container-form/form-tindak-lanjut'
+        )
+)
 
 const router = createBrowserRouter([
     {
@@ -61,7 +82,11 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'anak',
-                        element: <TableAnakFull />,
+                        element: (
+                            <SuspenseLoaderSection>
+                                <TableAnakFull />
+                            </SuspenseLoaderSection>
+                        ),
                     },
                     {
                         path: 'profil',
@@ -85,7 +110,11 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Anak"
                                         description="Isi semua yang terkait dengan data anak."
-                                        content={<ContainerDataAnak />}
+                                        content={
+                                            <SuspenseLoaderSection>
+                                                <ContainerDataAnak />
+                                            </SuspenseLoaderSection>
+                                        }
                                     />
                                 ),
                             },
@@ -95,7 +124,11 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Wali"
                                         description="Isi semua yang terkait dengan data wali."
-                                        content={<ContainerDataWali />}
+                                        content={
+                                            <SuspenseLoaderSection>
+                                                <ContainerDataWali />
+                                            </SuspenseLoaderSection>
+                                        }
                                     />
                                 ),
                             },
@@ -105,7 +138,11 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Sekolah"
                                         description="Isi semua yang terkait dengan data sekolah."
-                                        content={<ContainerDataSekolah />}
+                                        content={
+                                            <SuspenseLoaderSection>
+                                                <ContainerDataSekolah />
+                                            </SuspenseLoaderSection>
+                                        }
                                     />
                                 ),
                             },
@@ -115,7 +152,11 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Tindak Lanjut"
                                         description="Isi semua yang terkait dengan data tindak lanjut."
-                                        content={<ContainerDataTidakLanjut />}
+                                        content={
+                                            <SuspenseLoaderSection>
+                                                <ContainerDataTidakLanjut />
+                                            </SuspenseLoaderSection>
+                                        }
                                     />
                                 ),
                             },

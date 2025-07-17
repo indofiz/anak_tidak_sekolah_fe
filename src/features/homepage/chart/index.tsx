@@ -1,5 +1,8 @@
+import { SuspenseLoaderSection } from '@/loader-suspense'
+import React from 'react'
 import { Element } from 'react-scroll'
-import { ChartContent } from './chart'
+// import { ChartContent } from './chart'
+const ChartContent = React.lazy(() => import('./chart'))
 
 const ChartHome = () => {
     return (
@@ -18,7 +21,9 @@ const ChartHome = () => {
                     </p>
                 </div>
                 <div className="mt-8 h-[400px]">
-                    <ChartContent />
+                    <SuspenseLoaderSection>
+                        <ChartContent />
+                    </SuspenseLoaderSection>
                 </div>
             </div>
         </Element>

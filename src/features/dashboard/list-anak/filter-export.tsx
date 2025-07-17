@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Search, Users } from 'lucide-react'
+import React from 'react'
+import { Users } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -12,15 +12,7 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
 
 import { format } from 'date-fns'
 import { useAuthStore } from '@/store/login-store'
@@ -47,40 +39,9 @@ const objectToQueryString = (obj: Record<string, unknown>) => {
 const dateNow = format(new Date(), 'dd-MM-yyyy-HH:mm:ss')
 
 // Zod validation schema
-const formSchema = z
-    .object({
-        parameter: z.string().optional(),
-        per_page: z
-            .string()
-            .refine((val) => val === 'all' || /^\d+$/.test(val), {
-                message: 'Harus berupa angka atau "semua"',
-            }),
-        page: z
-            .string()
-            .optional()
-            .refine(
-                (val) => {
-                    if (!val) return true
-                    return /^\d+$/.test(val) && parseInt(val) > 0
-                },
-                {
-                    message: 'Harus lebih besar dari 0',
-                }
-            ),
-        is_old: z.boolean(),
-    })
-    .refine(
-        (data) => {
-            if (data.per_page !== 'all') {
-                return !!data.page && data.page.trim() !== ''
-            }
-            return true
-        },
-        {
-            message: 'Harus diisi jika per page bukan "semua"',
-            path: ['page'],
-        }
-    )
+const formSchema = z.object({
+    is_old: z.boolean(),
+})
 
 type FilterExportData = z.infer<typeof formSchema>
 
@@ -89,34 +50,20 @@ const FilterExport: React.FC = () => {
     const form = useForm<FilterExportData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            parameter: '',
-            per_page: '100',
-            page: '1',
             is_old: is_old === 1,
         },
     })
 
-    const per_page = form.watch('per_page')
     const { user } = useAuthStore()
 
     const isSubmitting = form.formState.isSubmitting
-
-    // Auto-clear page when per_page changes to 'all'
-    useEffect(() => {
-        if (per_page === 'all') {
-            form.setValue('page', '')
-            form.clearErrors('page')
-        } else if (!form.getValues('page')) {
-            form.setValue('page', '1')
-        }
-    }, [per_page, form])
 
     const onSubmit = async (data: FilterExportData) => {
         // Clean up data before submission
         const cleanData = {
             ...data,
-            per_page: data.per_page === 'all' ? '' : parseInt(data.per_page),
-            page: data.per_page === 'all' ? '' : data.page,
+            per_page: '',
+            page: '',
             is_old: data.is_old ? 1 : 0,
         }
 
@@ -165,8 +112,6 @@ const FilterExport: React.FC = () => {
         form.reset()
     }
 
-    const showPageField = per_page !== 'all'
-
     return (
         <div>
             <Form {...form}>
@@ -174,93 +119,6 @@ const FilterExport: React.FC = () => {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-6 mt-4"
                 >
-                    {/* Search Parameter */}
-                    <FormField
-                        control={form.control}
-                        name="parameter"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="flex items-center gap-2">
-                                    <Search className="w-4 h-4" />
-                                    Cari Nama atau NIK
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        placeholder="contoh: Julian"
-                                        className="w-full"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Full-width Per Page Select */}
-                    <FormField
-                        control={form.control}
-                        name="per_page"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Tampilkan Berapa Anak?</FormLabel>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Select items per page" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="5">
-                                            5 anak
-                                        </SelectItem>
-                                        <SelectItem value="10">
-                                            10 anak
-                                        </SelectItem>
-                                        <SelectItem value="20">
-                                            20 anak
-                                        </SelectItem>
-                                        <SelectItem value="50">
-                                            50 anak
-                                        </SelectItem>
-                                        <SelectItem value="100">
-                                            100 anak
-                                        </SelectItem>
-                                        <SelectItem value="all">
-                                            Semua Anak
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Conditional Page Field */}
-                    {showPageField && (
-                        <FormField
-                            control={form.control}
-                            name="page"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Halaman</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            type="number"
-                                            min="1"
-                                            placeholder="Masukan halaman..."
-                                            className="w-full"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    )}
-
                     {/* Age Filter */}
                     <FormField
                         control={form.control}

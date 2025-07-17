@@ -37,7 +37,7 @@ interface FormDataSekolahProps {
 
 const formSchema = z.object({
     nama_sekolah: z.string().min(1, 'Nama sekolah tidak boleh kosong'),
-    npsn_sekolah: z.string().min(1, 'NPSN sekolah tidak boleh kosong'),
+    npsn_sekolah: z.string().optional(),
     tingkat: z.string().min(1, 'Tingkat sekolah tidak boleh kosong'),
     kelas: z.string().min(1, 'Kelas tidak boleh kosong'),
     tahun_terakhir: z.string().min(1, 'Tahun tidak boleh kosong'),
@@ -149,10 +149,7 @@ export default function FormDataSekolah({
                     name="npsn_sekolah"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>
-                                NPSN Sekolah :{' '}
-                                <span className="text-red-500 text-xs">*</span>
-                            </FormLabel>
+                            <FormLabel>NPSN Sekolah :</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="contoh : 12345678"
