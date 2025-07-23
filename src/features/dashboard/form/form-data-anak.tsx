@@ -142,26 +142,23 @@ export default function FormDataAnak({ initialData }: FormDataAnakProps) {
             )
 
             // Execute mutation
-            if (calculateAge(values.tgl_lahir) < 18) {
-                mutation.mutate(formData, {
-                    onSuccess: () => {
-                        toast.success('Data berhasil disimpan')
-                        // Invalidate queries to refresh data
-                        queryClient.invalidateQueries({
-                            queryKey: ['anakList'],
-                        })
-                        queryClient.invalidateQueries({
-                            queryKey: ['anak-data', values.nik],
-                        })
-                        navigate(`/dashboard/anak/${values.nik}/data-wali`)
-                    },
-                    onError: (error) => {
-                        toast.error(error.message)
-                    },
-                })
-            } else {
-                toast.error('Anak harus berusia di bawah 18 tahun')
-            }
+
+            mutation.mutate(formData, {
+                onSuccess: () => {
+                    toast.success('Data berhasil disimpan')
+                    // Invalidate queries to refresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ['anakList'],
+                    })
+                    queryClient.invalidateQueries({
+                        queryKey: ['anak-data', values.nik],
+                    })
+                    navigate(`/dashboard/anak/${values.nik}/data-wali`)
+                },
+                onError: (error) => {
+                    toast.error(error.message)
+                },
+            })
         } catch (error) {
             console.error('Form submission error', error)
             toast.error('Gagal menyimpan data. Silakan coba lagi.')

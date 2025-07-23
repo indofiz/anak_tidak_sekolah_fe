@@ -27,6 +27,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAlasan } from '@/api/master-data/alasan'
 import { useAuthStore } from '@/store/login-store'
 import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
 interface FormDataSekolahProps {
     initialData?: SekolahData | null
@@ -39,7 +40,10 @@ const formSchema = z.object({
     nama_sekolah: z.string().min(1, 'Nama sekolah tidak boleh kosong'),
     npsn_sekolah: z.string().optional(),
     tingkat: z.string().min(1, 'Tingkat sekolah tidak boleh kosong'),
-    kelas: z.string().min(1, 'Kelas tidak boleh kosong'),
+    kelas: z
+        .string()
+        .min(1, 'Kelas tidak boleh kosong')
+        .regex(/^[0-9]+$/, 'Kelas harus berupa angka'), // Only allow digits
     tahun_terakhir: z.string().min(1, 'Tahun tidak boleh kosong'),
     alasan_tidak_sekolah: z.array(z.string()),
     lainnya: z.string().optional(),
@@ -66,6 +70,16 @@ export default function FormDataSekolah({
             lainnya: initialData?.lainnya || '',
         },
     })
+
+    const tingkat = form.watch('tingkat') // Watch tingkat field
+
+    // Automatically set kelas to "0" when TK is selected
+    useEffect(() => {
+        if (tingkat === 'TK') {
+            form.setValue('kelas', '0')
+        }
+    }, [tingkat, form])
+
     const mutation = useSaveSekolahData()
     const queryClient = useQueryClient()
 
@@ -213,11 +227,39 @@ export default function FormDataSekolah({
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="contoh : Kelas 12"
-                                    type="text"
+                                    placeholder="contoh : 12"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    disabled={tingkat === 'TK'} // Disable when TK selected
+                                    onKeyDown={(e) => {
+                                        // Prevent negative numbers
+                                        if (e.key === '-' || e.key === '+') {
+                                            e.preventDefault()
+                                        }
+                                    }}
                                     {...field}
+                                    onChange={(e) => {
+                                        // Handle empty input
+                                        const value = e.target.value
+                                        if (value === '') {
+                                            field.onChange('')
+                                            return
+                                        }
+
+                                        // Convert to number and back to string
+                                        const numValue = parseInt(value, 10)
+                                        if (!isNaN(numValue)) {
+                                            field.onChange(numValue.toString())
+                                        }
+                                    }}
                                 />
                             </FormControl>
+                            <FormDescription className="text-xs">
+                                {tingkat === 'TK'
+                                    ? 'Kelas otomatis 0 untuk tingkat TK'
+                                    : 'Gunakan angka (0-9) saja, jika tidak ada kelas, isi dengan 0'}
+                            </FormDescription>
 
                             <FormMessage />
                         </FormItem>

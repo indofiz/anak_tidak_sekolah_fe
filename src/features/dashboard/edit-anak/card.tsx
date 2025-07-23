@@ -5,6 +5,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
+import { SuspenseLoaderSection } from '@/loader-suspense'
 
 interface CardFormProps {
     title: string
@@ -18,7 +19,9 @@ const CardForm: React.FC<CardFormProps> = ({ title, description, content }) => {
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent className="px-2 md:px-4">{content}</CardContent>
+            <CardContent className="px-2 md:px-4">
+                <SuspenseLoaderSection>{content}</SuspenseLoaderSection>
+            </CardContent>
         </Card>
     )
 }

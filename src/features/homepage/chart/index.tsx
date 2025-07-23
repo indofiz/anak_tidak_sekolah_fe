@@ -9,7 +9,7 @@ const ChartHome = () => {
         <Element
             name="sebaran"
             id="sebaran"
-            className="container mx-auto py-8 mt-12"
+            className="container px-4 md:mx-auto py-8 mt-12 "
         >
             <div className="bg-gradient-to-br from-[#FFFDEF] to-[#FAD407] rounded-lg lg:rounded-3xl lg:border lg:border-yellow-primary py-8 px-4 md:px-12 text-black">
                 <div>

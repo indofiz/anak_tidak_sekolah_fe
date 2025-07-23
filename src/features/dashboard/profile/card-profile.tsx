@@ -27,8 +27,8 @@ export default function ProfileDetailCard() {
     }
 
     return (
-        <div className="w-full max-w-md mx-auto p-4">
-            <Card className="duration-300">
+        <div className="w-full max-w-md mx-auto md:p-4">
+            <Card className="duration-300 shadow-none">
                 <CardHeader className="pb-4">
                     <div className="flex flex-col items-center text-center space-y-3">
                         <div className="w-16 h-16 bg-blue-primary rounded-full flex items-center justify-center">

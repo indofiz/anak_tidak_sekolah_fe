@@ -110,11 +110,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Anak"
                                         description="Isi semua yang terkait dengan data anak."
-                                        content={
-                                            <SuspenseLoaderSection>
-                                                <ContainerDataAnak />
-                                            </SuspenseLoaderSection>
-                                        }
+                                        content={<ContainerDataAnak />}
                                     />
                                 ),
                             },
@@ -124,11 +120,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Wali"
                                         description="Isi semua yang terkait dengan data wali."
-                                        content={
-                                            <SuspenseLoaderSection>
-                                                <ContainerDataWali />
-                                            </SuspenseLoaderSection>
-                                        }
+                                        content={<ContainerDataWali />}
                                     />
                                 ),
                             },
@@ -138,11 +130,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Sekolah"
                                         description="Isi semua yang terkait dengan data sekolah."
-                                        content={
-                                            <SuspenseLoaderSection>
-                                                <ContainerDataSekolah />
-                                            </SuspenseLoaderSection>
-                                        }
+                                        content={<ContainerDataSekolah />}
                                     />
                                 ),
                             },
@@ -152,11 +140,7 @@ const router = createBrowserRouter([
                                     <CardForm
                                         title="Data Tindak Lanjut"
                                         description="Isi semua yang terkait dengan data tindak lanjut."
-                                        content={
-                                            <SuspenseLoaderSection>
-                                                <ContainerDataTidakLanjut />
-                                            </SuspenseLoaderSection>
-                                        }
+                                        content={<ContainerDataTidakLanjut />}
                                     />
                                 ),
                             },

@@ -7,7 +7,6 @@ const Homepage = () => {
     return (
         <>
             <Header />
-            {/* <AboutSection /> */}
             <GridAbout />
             <ChartHome />
             <Footer />

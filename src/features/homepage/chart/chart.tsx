@@ -9,6 +9,7 @@ import {
     ResponsiveContainer,
     XAxis,
 } from 'recharts'
+
 import {
     ChartConfig,
     ChartContainer,
@@ -22,6 +23,7 @@ import {
 } from '@/api/kecamatan-data'
 import { useMemo } from 'react'
 import Loading from '@/components/other/loading'
+import { useMediaQuery } from 'react-responsive'
 
 // Simplified chart configuration
 const chartConfig = {
@@ -48,6 +50,10 @@ export default function ChartContent() {
         queryKey: ['data-anak-kecamatan'],
         queryFn: () => fetchDataKecamatan(),
         retry: false,
+    })
+
+    const isDesktop = useMediaQuery({
+        query: '(min-width: 768px)',
     })
 
     // Transform API data to chart format
@@ -111,7 +117,8 @@ export default function ChartContent() {
                         tickMargin={10}
                         axisLine={false}
                         interval={0}
-                        angle={0}
+                        angle={isDesktop ? 0 : -90}
+                        textAnchor={isDesktop ? 'middle' : 'end'}
                         height={60}
                         tickFormatter={(value, index) => {
                             return chartData[index]?.kecamatan || value

@@ -60,7 +60,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ otp, setOtp }) => {
 
     return (
         <div className="flex flex-col space-y-4">
-            <Label htmlFor="otp-0">Masukan 6 Digit Kode OTP</Label>
+            <Label htmlFor="otp-0">Masukan 4 Digit Kode OTP</Label>
             <div className="flex items-center justify-center gap-2">
                 {otp.map((digit, index) => (
                     <Input
